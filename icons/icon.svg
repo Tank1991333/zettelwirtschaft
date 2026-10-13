@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22707D"/><stop offset="1" stop-color="#17505A"/></linearGradient>
+  <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#0B2F35" flood-opacity=".35"/></filter></defs>
+  <rect width="1024" height="1024" fill="url(#g)"/>
+  <g filter="url(#s)">
+    <rect x="262" y="190" width="500" height="640" rx="26" fill="#F1E4C2" transform="rotate(-10 512 512)"/>
+    <rect x="262" y="190" width="500" height="640" rx="26" fill="#FFFFFF" transform="rotate(5 512 512)"/>
+  </g>
+  <g transform="rotate(5 512 512)">
+    <rect x="340" y="290" width="250" height="34" rx="17" fill="#B7C7CC"/>
+    <rect x="340" y="370" width="330" height="34" rx="17" fill="#D3DEE1"/>
+    <rect x="340" y="450" width="190" height="34" rx="17" fill="#D3DEE1"/>
+  </g>
+  <g transform="translate(590 650)">
+    <circle r="150" fill="#E7B240" filter="url(#s)"/>
+    <circle r="112" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-dasharray="26 20"/>
+    <path d="M-52 4 L-14 44 L60 -40" fill="none" stroke="#FFFFFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zettelwirtschaft</title>
+<meta name="description" content="Pickerl, Reifen, Service, Versicherungen, Verträge und Ausweise der ganzen Familie an einem Ort – alle Daten bleiben lokal am Gerät.">
+<meta name="theme-color" content="#1D5E6A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zettelwirtschaft">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECEFF2; --paper:#FFFFFF; --ink:#18232E; --muted:#5E6B78; --line:#D5DBE1;
+  --petrol:#1D5E6A; --petrol-soft:#DCEBEC; --amber:#B97F08; --amber-soft:#FBEFD2;
+  --red:#B23A2B; --red-soft:#F7DEDA; --green:#2F7A45; --green-soft:#DDEFE2;
+  --note:#FFF6D8; --note-line:#E9D9A4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A21; --paper:#1B252E; --ink:#E6ECF1; --muted:#9AA8B5; --line:#2C3943;
+    --petrol:#5FB3BF; --petrol-soft:#1D3A40; --amber:#E7B240; --amber-soft:#3B3018;
+    --red:#EE7B6B; --red-soft:#43231F; --green:#6CC287; --green-soft:#1F3826;
+    --note:#2F2A1A; --note-line:#4A4126;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A21; --paper:#1B252E; --ink:#E6ECF1; --muted:#9AA8B5; --line:#2C3943;
+  --petrol:#5FB3BF; --petrol-soft:#1D3A40; --amber:#E7B240; --amber-soft:#3B3018;
+  --red:#EE7B6B; --red-soft:#43231F; --green:#6CC287; --green-soft:#1F3826;
+  --note:#2F2A1A; --note-line:#4A4126;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--petrol);outline-offset:2px}
+a{color:var(--petrol)}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 120px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-bottom:12px}
+.logo{width:40px;height:40px;flex:none}
+h1{font:700 30px/1.1 var(--display);margin:0;letter-spacing:-.01em}
+#sync{font-size:13px;color:var(--muted);flex-basis:100%;margin-left:54px;margin-top:-4px}
+h2{font:700 21px/1.2 var(--display);margin:28px 0 12px}
+h3{font:600 17px/1.3 var(--display);margin:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav.tabs button{flex:1;max-width:150px;min-width:0;background:none;border:0;padding:9px 2px 11px;cursor:pointer;color:var(--muted);font-weight:600;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;border-top:3px solid transparent}
+nav.tabs button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--petrol);border-top-color:var(--petrol)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font:700 26px/1.2 var(--display)}
+.stat span{color:var(--muted);font-size:14px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;gap:14px;align-items:center}
+.row .main{flex:1;min-width:0}
+.sub{color:var(--muted);font-size:13.5px;overflow-wrap:anywhere}
+.row .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.badge{width:58px;height:58px;border-radius:50%;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid currentColor;color:var(--petrol);background:var(--petrol-soft);position:relative;line-height:1}
+.badge .m{font:700 19px/1 var(--display)}
+.badge .y{font-size:11px;font-weight:700;margin-top:2px}
+.badge::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px dashed currentColor;opacity:.45}
+.badge.soon{color:var(--amber);background:var(--amber-soft)}
+.badge.late{color:var(--red);background:var(--red-soft)}
+.badge.done{color:var(--green);background:var(--green-soft)}
+.badge.doc{border-radius:12px}
+.badge.doc::after{border-radius:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--bg);color:var(--muted);margin:2px 4px 0 0;text-decoration:none}
+.late-txt{color:var(--red);font-weight:700}
+.soon-txt{color:var(--amber);font-weight:700}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--petrol);border-color:var(--petrol);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0E1A1D}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#0E1A1D}}
+.btn.ok{color:var(--green);border-color:var(--green)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.danger{color:var(--red);border-color:var(--red)}
+.btn:disabled{opacity:.5;cursor:wait}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:24px 0 12px}
+.bar h2{margin:0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper);flex-wrap:wrap}
+.seg button{border:0;background:none;padding:7px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--petrol-soft);color:var(--petrol)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.plate{display:inline-block;font:700 14px/1 var(--body);letter-spacing:.06em;border:2px solid var(--ink);border-radius:4px;padding:4px 8px 4px 14px;position:relative;background:var(--paper);white-space:nowrap}
+.plate::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:#1F4FA3}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;text-align:right}
+.empty{background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:22px;text-align:center;color:var(--muted)}
+.empty .btn{margin-top:10px}
+.fab{position:fixed;right:18px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:6;border-radius:999px;padding:12px 18px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+details summary{cursor:pointer;color:var(--petrol);font-weight:600;font-size:14px}
+.hist{margin-top:8px;font-size:13.5px}
+.hist div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:5px 0}
+.hist .sum{font-weight:700}
+/* Hinweis-Zettel */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
+.note{background:var(--note);border:1px solid var(--note-line);padding:16px 16px 14px;border-radius:3px;box-shadow:0 2px 0 var(--note-line);transform:rotate(-.5deg)}
+.note:nth-child(2n){transform:rotate(.6deg)}
+.note h3{margin-bottom:4px}
+.note p{margin:0 0 10px;font-size:14px}
+/* Anhänge */
+.files{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.files a.th,.files .th{width:52px;height:52px;border-radius:8px;border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);text-decoration:none;position:relative}
+.files img{width:100%;height:100%;object-fit:cover}
+.files button.th{padding:0;cursor:pointer}
+.fab[hidden]{display:none}
+.files .rm{position:absolute;top:1px;right:1px;width:20px;height:20px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);font-size:12px;line-height:20px;cursor:pointer;padding:0}
+/* Auswertung */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bars .b{display:grid;grid-template-columns:minmax(90px,170px) 1fr auto;gap:10px;align-items:center;font-size:14px}
+.bars .track{height:14px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bars .fill{height:100%;background:var(--petrol);border-radius:4px}
+.cols{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:10px}
+.cols .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
+.cols .c i{display:block;width:100%;max-width:38px;background:var(--petrol);border-radius:4px 4px 0 0;min-height:2px}
+.cols .c span{font-size:11px;color:var(--muted)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px}
+.panel h3{margin-bottom:12px}
+/* Dialog */
+dialog{border:0;border-radius:14px;padding:0;width:min(560px,calc(100% - 24px));background:var(--paper);color:var(--ink);max-height:calc(100% - 40px)}
+dialog::backdrop{background:rgba(10,20,28,.5)}
+.dlg-h{padding:18px 20px 6px}
+.dlg-b{padding:8px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dlg-f{padding:14px 20px 18px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld > label{font-size:13px;font-weight:600;color:var(--muted)}
+.fld input,.fld select,.fld textarea{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:var(--bg);width:100%}
+.fld textarea{min-height:64px;resize:vertical}
+.check{display:flex;gap:8px;align-items:center;grid-column:1/-1;font-weight:600}
+.hint{grid-column:1/-1;font-size:13px;color:var(--muted);margin:0}
+.err{grid-column:1/-1;color:var(--red);font-weight:600;font-size:14px;margin:0}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches button{width:30px;height:30px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.swatches button[aria-pressed="true"]{border-color:var(--ink)}
+.prose p{margin:0 0 10px;max-width:68ch}
+@media (max-width:560px){
+  .dlg-b{grid-template-columns:1fr}
+  .row{flex-wrap:wrap}
+  .row .acts{width:100%;justify-content:flex-start;padding-left:72px}
+  h1{font-size:26px}
+  nav.tabs button{font-size:10.5px}
+  .stat{padding:12px}
+  .stat b{font-size:21px}
+  .stat span{font-size:12.5px;display:block;line-height:1.35}
+}
+@media (prefers-reduced-motion:no-preference){
+  dialog[open]{animation:pop .16s ease-out}
+  @keyframes pop{from{transform:translateY(8px);opacity:0}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#1D5E6A"/>
+      <rect x="17" y="13" width="30" height="38" rx="2" fill="#F3E7C9" transform="rotate(-9 32 32)"/>
+      <rect x="17" y="13" width="30" height="38" rx="2" fill="#FFFFFF" transform="rotate(5 32 32)"/>
+      <rect x="23" y="20" width="14" height="2.6" rx="1.3" fill="#9FB4BA" transform="rotate(5 32 32)"/>
+      <rect x="23" y="26" width="10" height="2.6" rx="1.3" fill="#9FB4BA" transform="rotate(5 32 32)"/>
+      <circle cx="35" cy="40" r="8" fill="#E7B240"/><circle cx="35" cy="40" r="5.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 2"/>
+    </svg>
+    <h1>Zettelwirtschaft</h1>
+    <span id="sync">Wird geladen …</span>
+  </header>
+  <div class="chips" id="chips" role="group" aria-label="Nach Person filtern"></div>
+  <main id="view"></main>
+</div>
+
+<button class="btn primary fab" id="fab">+ Neu</button>
+<nav class="tabs" id="tabs" aria-label="Bereiche"></nav>
+<dialog id="dlg"><div id="dlgInner"></div></dialog>
+<dialog id="viewer"><div id="viewerInner"></div></dialog>
+
+<script>
+/* ================= Konstanten ================= */
+const CATS = {auto:"Auto", haus:"Haus & Wohnung", gesundheit:"Gesundheit", sonst:"Sonstiges"};
+const KINDS = {
+  pickerl:{l:"Pickerl (§57a)",c:"auto",m:12},
+  reifen:{l:"Reifenwechsel",c:"auto",m:6,special:true},
+  service:{l:"Service",c:"auto",m:12},
+  oel:{l:"Ölwechsel",c:"auto",m:12},
+  vignette:{l:"Vignette",c:"auto",m:12,special:true},
+  reparatur:{l:"Reparatur",c:"auto",m:0},
+  therme:{l:"Thermenwartung",c:"haus",m:12},
+  rauchfang:{l:"Rauchfangkehrer",c:"haus",m:12},
+  rauchmelder:{l:"Rauchmelder-Batterien",c:"haus",m:12},
+  klima:{l:"Klimaanlage-Service",c:"haus",m:12},
+  haus:{l:"Haus – Sonstiges",c:"haus",m:0},
+  vorsorge:{l:"Vorsorgeuntersuchung",c:"gesundheit",m:12},
+  zahnarzt:{l:"Zahnarzt / Mundhygiene",c:"gesundheit",m:6},
+  impfung:{l:"Impfung / Auffrischung",c:"gesundheit",m:0},
+  arzt:{l:"Arzttermin",c:"gesundheit",m:0},
+  sonst:{l:"Sonstiges",c:"sonst",m:0}
+};
+const INS_TYPES = ["KFZ-Haftpflicht","Teilkasko","Vollkasko","Haushalt","Eigenheim","Unfall","Leben","Kranken","Rechtsschutz","Reise","Handy","Sonstige"];
+const ABO_TYPES = ["Handy","Internet","Strom","Gas","Fernwärme","ORF-Beitrag","Streaming","Zeitung / Magazin","Fitnessstudio","Leasing / Kredit","Bausparvertrag","Sonstiges"];
+const DOC_TYPES = {"Reisepass":6,"Personalausweis":3,"Führerschein":3,"E-Card":2,"Zulassungsschein":0,"Bankomatkarte":1,"Kreditkarte":1,"Sonstiges":3};
+const FREQ = {"monatlich":12,"vierteljährlich":4,"halbjährlich":2,"jährlich":1};
+const COLORS = ["#1D5E6A","#B0532E","#6A4C93","#2F7A45","#C08A00","#3A5BA0","#A23B72","#5B6770"];
+const MONTHS = ["Jän","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const I = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ICONS = {
+  overview:I('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+  tasks:I('<path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>'),
+  vehicles:I('<path d="M4 16V11l2-5h12l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/>'),
+  contracts:I('<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>'),
+  docs:I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6M14 10h4M14 13.5h4"/>'),
+  more:I('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>')
+};
+const TABS = [["overview","Übersicht"],["tasks","Aufgaben"],["vehicles","Autos"],["contracts","Verträge"],["docs","Ausweise"],["more","Mehr"]];
+
+/* ================= Hilfen ================= */
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const eur = n => new Intl.NumberFormat("de-AT",{style:"currency",currency:"EUR"}).format(Number(n)||0);
+const num = (n,d=0) => (Number(n)||0).toLocaleString("de-AT",{minimumFractionDigits:d,maximumFractionDigits:d});
+const pad = n => String(n).padStart(2,"0");
+const ds = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const todayStr = () => ds(new Date());
+const fmtD = s => s ? new Date(s+"T00:00").toLocaleDateString("de-AT") : "–";
+const addMonths = (s,m) => { const d = new Date(s+"T00:00"); const day = d.getDate(); d.setMonth(d.getMonth()+Number(m)); if(d.getDate()!==day) d.setDate(0); return ds(d); };
+const addDays = (s,n) => { const d = new Date(s+"T00:00"); d.setDate(d.getDate()+n); return ds(d); };
+const daysUntil = s => Math.round((new Date(s+"T00:00") - new Date(todayStr()+"T00:00"))/864e5);
+const yearOf = s => s ? Number(s.slice(0,4)) : null;
+const byId = (arr,id) => arr.find(x => x.id === id);
+
+/* ================= Zustand ================= */
+let S = norm(null);
+let tab = "overview", filter = "all", taskView = "open", taskCat = "all", contractView = "ins", moreView = "family";
+let statYear = new Date().getFullYear();
+const LKEY = "familienordner-v1";
+
+function norm(o){
+  o = o || {};
+  return {
+    members: o.members || [],
+    vehicles: (o.vehicles || []).map(v => ({files:[], ...v})),
+    contracts: (o.contracts || o.insurances || []).map(c => ({cat:"ins", autoRenew:true, notice:"", files:[], ...c})),
+    tasks: (o.tasks || []).map(t => ({files:[], ...t})),
+    docs: (o.docs || []).map(d => ({files:[], ...d})),
+    fuel: o.fuel || []
+  };
+}
+const member = id => byId(S.members,id);
+const vehicle = id => byId(S.vehicles,id);
+
+/* ================= Lokaler Speicher ================= */
+let dlApi = null;
+const BKEY = LKEY + "-letzter-export";
+function setSync(t){ document.getElementById("sync").textContent = t; }
+function loadLocal(){ try{ const r = localStorage.getItem(LKEY); if(r) S = norm(JSON.parse(r)); }catch(e){} }
+function saveLocal(){ try{ localStorage.setItem(LKEY, JSON.stringify(S)); return true; }catch(e){ return false; } }
+function save(){
+  const ok = saveLocal();
+  setSync(ok ? "Nur auf diesem Gerät gespeichert" : "Speichern fehlgeschlagen – ist der Speicher des Browsers voll?");
+  requestPersist(); scheduleClean(); render();
+}
+let persistAsked = false;
+function requestPersist(){ if(persistAsked) return; persistAsked = true; try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){} }
+const lastBackup = () => { try{ return localStorage.getItem(BKEY) || ""; }catch(e){ return ""; } };
+
+/* Fotos & PDFs in IndexedDB */
+const IDB = (() => {
+  let p;
+  const open = () => p || (p = new Promise((res,rej) => {
+    const r = indexedDB.open("zettelwirtschaft", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("files");
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const tx = async (mode, fn) => { const db = await open(); return new Promise((res,rej) => {
+    const t = db.transaction("files", mode); const req = fn(t.objectStore("files"));
+    t.oncomplete = () => res(req ? req.result : undefined); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+  }); };
+  return {
+    get: id => tx("readonly", s => s.get(id)),
+    put: (id, v) => tx("readwrite", s => s.put(v, id)),
+    del: id => tx("readwrite", s => s.delete(id)),
+    keys: () => tx("readonly", s => s.getAllKeys())
+  };
+})();
+const urlCache = {};
+async function blobFor(id){ try{ const r = await IDB.get(id); return r ? new Blob([r.data], {type:r.type}) : null; }catch(e){ return null; } }
+async function urlFor(id){ if(urlCache[id]) return urlCache[id]; const b = await blobFor(id); return b ? (urlCache[id] = URL.createObjectURL(b)) : null; }
+async function hydrate(root){ for(const el of root.querySelectorAll("img[data-fid]:not([src])")){ const u = await urlFor(el.dataset.fid); el.src = u || ("/_blob/" + el.dataset.fid); } }
+const usedFileIds = () => { const u = new Set(); [S.vehicles,S.tasks,S.contracts,S.docs].forEach(a => a.forEach(x => (x.files||[]).forEach(f => u.add(f.id)))); return u; };
+let cleanTimer = null;
+function scheduleClean(){
+  clearTimeout(cleanTimer);
+  cleanTimer = setTimeout(async () => {
+    if(dlg.open) return scheduleClean();
+    try{ const used = usedFileIds(); for(const k of await IDB.keys()) if(!used.has(k)){ await IDB.del(k); if(urlCache[k]){ URL.revokeObjectURL(urlCache[k]); delete urlCache[k]; } } }catch(e){}
+  }, 4000);
+}
+
+async function saveFile(filename, blob){
+  if(dlApi) return dlApi.save({filename, data:blob});
+  const u = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = u; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 10000);
+}
+async function useCap(name){ try{ return window.claude && window.claude.use ? await window.claude.use(name) : null; }catch(e){ return null; } }
+async function initCaps(){
+  useCap("downloads").then(d => { dlApi = d; if(tab==="more") render(); });
+  // Einmalig: Daten aus der früheren Online-Version auf dieses Gerät holen und die Online-Kopie löschen
+  const db = await useCap("db"); if(!db) return;
+  try{
+    const ref = db.doc("haushalt/daten"); const snap = await ref.get();
+    if(!snap.exists) return;
+    if(!hasData()){ S = norm(snap.data()); saveLocal(); render(); }
+    if(hasData()){ await ref.delete(); setSync("Daten auf dieses Gerät übernommen – Online-Kopie gelöscht"); }
+  }catch(e){}
+}
+const hasData = () => S.members.length||S.vehicles.length||S.tasks.length||S.contracts.length||S.docs.length;
+
+/* ================= Filter ================= */
+const vehicleMember = vid => vehicle(vid)?.memberId || "";
+function matchMember(memberId, vehicleId){
+  if(filter === "all") return true;
+  return memberId === filter || (!!vehicleId && vehicleMember(vehicleId) === filter);
+}
+const fTasks = () => S.tasks.filter(t => matchMember(t.memberId, t.vehicleId));
+const fContracts = () => S.contracts.filter(c => matchMember(c.memberId, c.vehicleId));
+const fVeh = () => S.vehicles.filter(v => filter==="all" || v.memberId === filter);
+const fDocs = () => S.docs.filter(d => filter==="all" || d.memberId === filter);
+const fFuel = () => S.fuel.filter(f => filter==="all" || vehicleMember(f.vehicleId) === filter);
+const yearly = c => (Number(c.premium)||0) * (FREQ[c.freq]||1);
+const catOf = t => KINDS[t.kind]?.c || "sonst";
+const kindLabel = t => KINDS[t.kind]?.l || "Aufgabe";
+
+/* ================= Fristen-Logik ================= */
+function pickerlWindow(due){
+  const d = new Date(due+"T00:00"), y = d.getFullYear(), m = d.getMonth();
+  return {from: ds(new Date(y, m-1, 1)), to: ds(new Date(y, m+5, 0))};
+}
+function taskStatus(t){
+  if(t.done) return "done";
+  if(!t.due) return "";
+  const today = todayStr();
+  if(t.kind === "pickerl"){
+    const w = pickerlWindow(t.due);
+    return today > w.to ? "late" : today >= w.from ? "soon" : "";
+  }
+  const n = daysUntil(t.due);
+  return n < 0 ? "late" : n <= 30 ? "soon" : "";
+}
+function nextDue(kind, from, rep){
+  const d = new Date(from+"T00:00"), y = d.getFullYear();
+  if(kind === "reifen"){
+    const c = [`${y}-04-01`,`${y}-10-15`,`${y+1}-04-01`,`${y+1}-10-15`].find(x => x > addDays(from,60));
+    return c;
+  }
+  if(kind === "vignette") return d.getMonth() === 11 ? `${y+2}-01-31` : `${y+1}-01-31`;
+  return rep > 0 ? addMonths(from, rep) : "";
+}
+function effRenewal(c){
+  if(!c.renewal) return "";
+  let r = c.renewal, g = 0;
+  if(c.autoRenew !== false) while(daysUntil(r) < 0 && g++ < 60) r = addMonths(r, 12);
+  return r;
+}
+function deadline(c){ const r = effRenewal(c); return r ? (Number(c.notice) ? addMonths(r, -Number(c.notice)) : r) : ""; }
+function contractStatus(c){
+  if(!c.renewal) return "";
+  if(c.autoRenew === false && daysUntil(c.renewal) < 0) return "late";
+  const n = daysUntil(deadline(c));
+  return n >= 0 && n <= 60 ? "soon" : "";
+}
+function docWarn(d){ return DOC_TYPES[d.type] ?? 3; }
+function docStatus(d){
+  if(!d.expiry) return "";
+  if(daysUntil(d.expiry) < 0) return "late";
+  return daysUntil(addMonths(d.expiry, -docWarn(d))) <= 0 ? "soon" : "";
+}
+
+/* ================= Bausteine ================= */
+function badge(dateStr, cls, shape=""){
+  if(!dateStr) return `<div class="badge ${shape}" aria-hidden="true"><span class="m">–</span></div>`;
+  const d = new Date(dateStr+"T00:00");
+  return `<div class="badge ${cls||""} ${shape}" aria-hidden="true"><span class="m">${MONTHS[d.getMonth()]}</span><span class="y">${d.getFullYear()}</span></div>`;
+}
+function dueText(t){
+  if(!t.due) return "ohne Termin";
+  const st = taskStatus(t);
+  if(t.kind === "pickerl"){
+    const w = pickerlWindow(t.due);
+    if(st === "late") return `<span class="late-txt">Frist abgelaufen am ${fmtD(w.to)}</span>`;
+    if(st === "soon") return `<span class="soon-txt">Jetzt machen lassen – spätestens bis ${fmtD(w.to)}</span>`;
+    return `Plakette ${MONTHS[new Date(t.due+"T00:00").getMonth()]} ${yearOf(t.due)} · möglich ab ${fmtD(w.from)}`;
+  }
+  const n = daysUntil(t.due);
+  if(n < 0) return `<span class="late-txt">seit ${-n} ${-n===1?"Tag":"Tagen"} überfällig</span>`;
+  if(n === 0) return `<span class="soon-txt">heute fällig</span>`;
+  if(n <= 30) return `<span class="soon-txt">in ${n} ${n===1?"Tag":"Tagen"}</span> · ${fmtD(t.due)}`;
+  return `fällig ${fmtD(t.due)}`;
+}
+function whoTags(memberId, vehicleId){
+  let h = "";
+  const v = vehicle(vehicleId); if(v) h += `<span class="tag">${esc(v.name)}${v.plate?" · "+esc(v.plate):""}</span>`;
+  const m = member(memberId || v?.memberId); if(m) h += `<span class="tag"><span class="dot" style="background:${m.color}"></span>${esc(m.name)}</span>`;
+  return h;
+}
+function filesView(files){
+  if(!files || !files.length) return "";
+  return `<div class="files">${files.map(f => `<button type="button" class="th" data-act="openFile" data-fid="${f.id}" data-name="${esc(f.name)}" data-type="${esc(f.type)}" title="${esc(f.name)}">${f.type && f.type.startsWith("image/") ? `<img data-fid="${f.id}" alt="${esc(f.name)}">` : "PDF"}</button>`).join("")}</div>`;
+}
+function gcal(title, date, details){
+  if(!date) return "";
+  const a = date.replace(/-/g,""), b = addDays(date,1).replace(/-/g,"");
+  const u = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${a}/${b}&details=${encodeURIComponent((details||"")+"\n\nAus der Zettelwirtschaft")}`;
+  return `<a class="btn ghost" href="${u}" target="_blank" rel="noopener" title="In Google Kalender eintragen">Kalender</a>`;
+}
+function empty(text, act, label){
+  return `<div class="empty"><div>${text}</div>${act?`<button class="btn primary" data-act="${act}">${label}</button>`:""}</div>`;
+}
+
+function taskRow(t){
+  const k = kindLabel(t), st = taskStatus(t);
+  const sub = t.done
+    ? `Erledigt am ${fmtD(t.doneDate)}${t.cost?` · <b>${eur(t.cost)}</b>`:""}${t.km?` · ${num(t.km)} km`:""}`
+    : dueText(t);
+  const calDate = t.kind==="pickerl" && t.due ? pickerlWindow(t.due).from : t.due;
+  return `<div class="row">
+    ${badge(t.done ? t.doneDate : t.due, st)}
+    <div class="main"><h3>${esc(t.title || k)}</h3>
+      <div class="sub">${t.title && t.title!==k ? esc(k)+" · ":""}${sub}</div>
+      <div>${whoTags(t.memberId,t.vehicleId)}<span class="tag">${CATS[catOf(t)]}</span></div>
+      ${t.notes?`<div class="sub">${esc(t.notes)}</div>`:""}
+      ${filesView(t.files)}
+    </div>
+    <div class="acts">
+      ${t.done ? "" : `<button class="btn ok" data-act="done" data-id="${t.id}">Erledigt</button>${gcal(t.title||k, calDate, whoText(t.memberId,t.vehicleId))}`}
+      <button class="btn ghost" data-act="editTask" data-id="${t.id}">Bearbeiten</button>
+    </div></div>`;
+}
+function whoText(memberId, vehicleId){
+  const v = vehicle(vehicleId), m = member(memberId || v?.memberId);
+  return [v ? v.name+(v.plate?" ("+v.plate+")":"") : "", m ? m.name : ""].filter(Boolean).join(" – ");
+}
+function contractRow(c){
+  const st = contractStatus(c), r = effRenewal(c), dl = deadline(c);
+  let fr = "Kein Ablaufdatum";
+  if(c.renewal){
+    if(st === "late") fr = `<span class="late-txt">Abgelaufen am ${fmtD(c.renewal)}</span>`;
+    else if(Number(c.notice)){
+      const txt = `Kündigen bis ${fmtD(dl)} (läuft bis ${fmtD(r)}${c.autoRenew!==false?", verlängert sich sonst":""})`;
+      fr = st === "soon" ? `<span class="soon-txt">${txt}</span>` : txt;
+    } else {
+      const txt = `${c.autoRenew!==false?"Verlängerung":"Ablauf"} am ${fmtD(r)}`;
+      fr = st === "soon" ? `<span class="soon-txt">${txt}</span>` : txt;
+    }
+  }
+  return `<div class="row">
+    ${badge(Number(c.notice)?dl:r, st)}
+    <div class="main"><h3>${esc(c.type)}${c.company?" – "+esc(c.company):""}</h3>
+      <div class="sub">${eur(c.premium)} ${esc(c.freq||"jährlich")}${c.freq&&c.freq!=="jährlich"?` (${eur(yearly(c))}/Jahr)`:""}${c.policy?" · Nr. "+esc(c.policy):""}</div>
+      <div class="sub">${fr}</div>
+      <div>${whoTags(c.memberId,c.vehicleId)}</div>
+      ${c.notes?`<div class="sub">${esc(c.notes)}</div>`:""}
+      ${filesView(c.files)}
+    </div>
+    <div class="acts">${dl?gcal(`${Number(c.notice)?"Kündigungsfrist":"Verlängerung"}: ${c.type}${c.company?" "+c.company:""}`, dl, c.policy?"Nr. "+c.policy:""):""}<button class="btn ghost" data-act="editContract" data-id="${c.id}">Bearbeiten</button></div></div>`;
+}
+function docRow(d){
+  const st = docStatus(d), m = member(d.memberId);
+  let t = d.expiry ? `gültig bis ${fmtD(d.expiry)}` : "ohne Ablaufdatum";
+  if(st === "late") t = `<span class="late-txt">abgelaufen seit ${fmtD(d.expiry)}</span>`;
+  else if(st === "soon") t = `<span class="soon-txt">läuft ab am ${fmtD(d.expiry)} – rechtzeitig verlängern</span>`;
+  const remind = d.expiry ? addMonths(d.expiry, -docWarn(d)) : "";
+  return `<div class="row">
+    ${badge(d.expiry, st, "doc")}
+    <div class="main"><h3>${esc(d.type)}${m?" – "+esc(m.name):""}</h3>
+      <div class="sub">${t}${d.number?" · Nr. "+esc(d.number):""}</div>
+      ${d.notes?`<div class="sub">${esc(d.notes)}</div>`:""}
+      ${filesView(d.files)}
+    </div>
+    <div class="acts">${remind?gcal(`${d.type}${m?" "+m.name:""} verlängern`, remind, "Läuft ab am "+fmtD(d.expiry)):""}<button class="btn ghost" data-act="editDoc" data-id="${d.id}">Bearbeiten</button></div></div>`;
+}
+
+/* ================= Hinweis-Zettel (Saison) ================= */
+function seasonalNotes(){
+  const vs = fVeh(); if(!vs.length) return "";
+  const today = todayStr(), y = new Date().getFullYear(), md = today.slice(5);
+  const out = [];
+  const hasOpen = (v, kind, until) => S.tasks.some(t => t.vehicleId===v.id && t.kind===kind && !t.done && t.due && t.due <= until);
+  const doneSince = (v, kind, since) => S.tasks.some(t => t.vehicleId===v.id && t.kind===kind && t.done && t.doneDate >= since);
+  if(md >= "10-01" && md <= "11-15"){
+    const miss = vs.filter(v => !hasOpen(v,"reifen",`${y}-12-01`) && !doneSince(v,"reifen",`${y}-09-01`));
+    if(miss.length) out.push({t:"Winterreifen", p:`Von 1. November bis 15. April gilt in Österreich die situative Winterreifenpflicht. Für ${miss.map(v=>esc(v.name)).join(", ")} ist noch kein Reifenwechsel eingetragen.`, act:"seasonTires", data:"winter"});
+  }
+  if(md >= "03-15" && md <= "04-30"){
+    const miss = vs.filter(v => !hasOpen(v,"reifen",`${y}-06-01`) && !doneSince(v,"reifen",`${y}-03-01`));
+    if(miss.length) out.push({t:"Sommerreifen", p:`Die Winterreifenpflicht endet am 15. April. Für ${miss.map(v=>esc(v.name)).join(", ")} ist noch kein Wechsel eingetragen.`, act:"seasonTires", data:"summer"});
+  }
+  if(md >= "11-15" || md <= "01-31"){
+    const since = md >= "11-15" ? `${y}-11-01` : `${y-1}-11-01`;
+    const miss = vs.filter(v => !S.tasks.some(t => t.vehicleId===v.id && t.kind==="vignette" && (!t.done || t.doneDate >= since)));
+    if(miss.length) out.push({t:"Vignette", p:`Die neue Jahresvignette gilt ab 1. Dezember, die alte noch bis 31. Jänner. Noch offen für ${miss.map(v=>esc(v.name)).join(", ")}.`, act:"seasonVignette"});
+  }
+  if(!out.length) return "";
+  return `<div class="notes">${out.map(n=>`<div class="note"><h3>${n.t}</h3><p>${n.p}</p><button class="btn" data-act="${n.act}" data-v="${n.data||""}">Aufgaben eintragen</button></div>`).join("")}</div>`;
+}
+function seasonTires(kind){
+  const y = new Date().getFullYear(), today = todayStr();
+  const target = kind === "winter" ? `${y}-10-31` : `${y}-04-20`;
+  const due = today <= addDays(target,-7) ? target : addDays(today,7);
+  const md = today.slice(5);
+  fVeh().forEach(v => {
+    const exists = S.tasks.some(t => t.vehicleId===v.id && t.kind==="reifen" && (!t.done || t.doneDate >= (kind==="winter"?`${y}-09-01`:`${y}-03-01`)));
+    if(!exists) S.tasks.push({id:uid(), kind:"reifen", title: kind==="winter"?"Winterreifen drauf":"Sommerreifen drauf", due, vehicleId:v.id, memberId:"", notes:"", done:false, files:[]});
+  });
+  save();
+}
+function seasonVignette(){
+  const y = new Date().getFullYear(), md = todayStr().slice(5);
+  const due = md >= "11-15" ? `${y+1}-01-31` : `${y}-01-31`;
+  const since = md >= "11-15" ? `${y}-11-01` : `${y-1}-11-01`;
+  fVeh().forEach(v => {
+    if(!S.tasks.some(t => t.vehicleId===v.id && t.kind==="vignette" && (!t.done || t.doneDate >= since)))
+      S.tasks.push({id:uid(), kind:"vignette", title:"Vignette kaufen", due, vehicleId:v.id, memberId:"", notes:"", done:false, files:[]});
+  });
+  save();
+}
+
+/* ================= Ansichten ================= */
+function vOverview(){
+  const open = fTasks().filter(t => !t.done);
+  const late = open.filter(t => taskStatus(t)==="late").length;
+  const y = new Date().getFullYear();
+  const spent = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0)
+              + fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
+  const fixed = fContracts().reduce((a,c)=>a+yearly(c),0);
+  let h = `<div class="stats">
+    <div class="stat"><b>${open.length}</b><span>offene Aufgaben${late?` · <span class="late-txt">${late} überfällig</span>`:""}</span></div>
+    <div class="stat"><b>${eur(spent)}</b><span>Ausgaben ${y} (Aufgaben & Tanken)</span></div>
+    <div class="stat"><b>${eur(fixed/12)}</b><span>Fixkosten pro Monat (Verträge)</span></div>
+    <div class="stat"><b>${eur(fixed)}</b><span>Fixkosten pro Jahr</span></div>
+  </div>`;
+  if(!S.members.length && !S.vehicles.length){
+    return h + `<h2>So fängst du an</h2>` + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Danach kannst du Pickerl, Reifenwechsel, Thermenwartung, Arzttermine, Verträge und Ausweise eintragen.","addMember","Person hinzufügen");
+  }
+  const lb = lastBackup();
+  if(!lb || daysUntil(lb) < -30) h += `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. ${lb?`Der letzte Export war am ${fmtD(lb)}.`:"Du hast noch keinen Export gemacht."} Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>`;
+  h += seasonalNotes();
+  const items = [];
+  open.forEach(t => items.push({d: t.due || "9999", st: taskStatus(t), html: taskRow(t)}));
+  fContracts().forEach(c => { const st = contractStatus(c); if(st) items.push({d: deadline(c)||c.renewal, st, html: contractRow(c)}); });
+  fDocs().forEach(d => { const st = docStatus(d); if(st) items.push({d: d.expiry, st, html: docRow(d)}); });
+  const rank = {late:0, soon:1, "":2};
+  items.sort((a,b) => (rank[a.st]-rank[b.st]) || a.d.localeCompare(b.d));
+  h += `<h2>Als Nächstes</h2>`;
+  h += items.length ? `<div class="list">${items.slice(0,10).map(i=>i.html).join("")}</div>` : empty("Nichts fällig. Alles erledigt!","addTask","Aufgabe hinzufügen");
+  if(items.length > 10) h += `<p class="sub">… und ${items.length-10} weitere unter Aufgaben, Verträge und Dokumente.</p>`;
+  return h;
+}
+
+function vTasks(){
+  let all = fTasks();
+  if(taskCat !== "all") all = all.filter(t => catOf(t) === taskCat);
+  const list = taskView === "open"
+    ? all.filter(t=>!t.done).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999"))
+    : all.filter(t=>t.done).sort((a,b)=>(b.doneDate||"").localeCompare(a.doneDate||""));
+  let h = `<div class="bar"><h2>Aufgaben</h2>
+    <div class="seg"><button data-act="tv" data-v="open" aria-pressed="${taskView==="open"}">Offen</button><button data-act="tv" data-v="done" aria-pressed="${taskView==="done"}">Erledigt</button></div></div>
+    <div class="chips" style="margin-top:0">${[["all","Alle Bereiche"],...Object.entries(CATS)].map(([k,l])=>`<button class="chip" data-act="tcat" data-v="${k}" aria-pressed="${taskCat===k}">${l}</button>`).join("")}</div>`;
+  if(taskView === "done" && list.length){
+    const byYear = {};
+    list.forEach(t => { const y = yearOf(t.doneDate)||"–"; byYear[y] = (byYear[y]||0) + (Number(t.cost)||0); });
+    h += `<p class="sub" style="margin:0 0 10px">Kosten: ${Object.entries(byYear).sort((a,b)=>b[0]-a[0]).map(([y,s])=>`${y}: <b>${eur(s)}</b>`).join(" · ")}</p>`;
+  }
+  h += list.length ? `<div class="list">${list.map(taskRow).join("")}</div>`
+    : empty(taskView==="open" ? "Keine offenen Aufgaben in diesem Bereich." : "Noch nichts erledigt.", taskView==="open"?"addTask":"", "Aufgabe hinzufügen");
+  return h;
+}
+
+function fuelStats(vid){
+  const e = S.fuel.filter(f => f.vehicleId===vid && Number(f.km)>0).sort((a,b)=>a.km-b.km);
+  const r = {cons:null, last:null, costKm:null};
+  const fulls = e.map((f,i)=>({f,i})).filter(x=>x.f.full!==false);
+  if(fulls.length >= 2){
+    const a = fulls[0], b = fulls[fulls.length-1];
+    const lit = e.slice(a.i+1, b.i+1).reduce((s,f)=>s+(Number(f.liters)||0),0);
+    const cost = e.slice(a.i+1, b.i+1).reduce((s,f)=>s+(Number(f.cost)||0),0);
+    const km = b.f.km - a.f.km;
+    if(km > 0){ r.cons = lit/km*100; r.costKm = cost/km; }
+    const p = fulls[fulls.length-2];
+    const lit2 = e.slice(p.i+1, b.i+1).reduce((s,f)=>s+(Number(f.liters)||0),0);
+    const km2 = b.f.km - p.f.km; if(km2 > 0) r.last = lit2/km2*100;
+  }
+  return r;
+}
+function vVehicles(){
+  const vs = fVeh(), y = new Date().getFullYear();
+  let h = `<div class="bar"><h2>Fahrzeuge</h2><button class="btn" data-act="addVehicle">+ Fahrzeug</button></div>`;
+  if(!vs.length) return h + empty("Noch keine Fahrzeuge eingetragen.","addVehicle","Fahrzeug hinzufügen");
+  h += `<div class="grid">` + vs.map(v => {
+    const ts = S.tasks.filter(t => t.vehicleId === v.id);
+    const done = ts.filter(t=>t.done).sort((a,b)=>(b.doneDate||"").localeCompare(a.doneDate||""));
+    const fuel = S.fuel.filter(f => f.vehicleId === v.id).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    const maintY = done.filter(t=>yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0);
+    const fuelY = fuel.filter(f=>yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
+    const total = done.reduce((a,t)=>a+(Number(t.cost)||0),0);
+    const insY = S.contracts.filter(c => c.vehicleId === v.id).reduce((a,c)=>a+yearly(c),0);
+    const nextPick = ts.filter(t=>!t.done && t.kind==="pickerl").sort((a,b)=>(a.due||"9").localeCompare(b.due||"9"))[0];
+    const fs = fuelStats(v.id);
+    const m = member(v.memberId);
+    let pickTxt = "–";
+    if(nextPick){ const st = taskStatus(nextPick); pickTxt = `<span class="${st==="late"?"late-txt":st==="soon"?"soon-txt":""}">${MONTHS[new Date(nextPick.due+"T00:00").getMonth()]} ${yearOf(nextPick.due)}</span>`; }
+    return `<div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div><h3>${esc(v.name)}</h3>${m?`<div class="sub" style="margin-top:2px"><span class="dot" style="background:${m.color}"></span> ${esc(m.name)}</div>`:""}</div>
+        ${v.plate?`<span class="plate">${esc(v.plate)}</span>`:""}
+      </div>
+      <dl class="kv">
+        ${v.year?`<dt>Baujahr</dt><dd>${esc(v.year)}</dd>`:""}
+        ${v.km?`<dt>km-Stand</dt><dd>${num(v.km)}</dd>`:""}
+        <dt>Nächstes Pickerl</dt><dd>${pickTxt}</dd>
+        <dt>Offene Aufgaben</dt><dd>${ts.filter(t=>!t.done).length}</dd>
+        <dt>Werkstatt ${y}</dt><dd>${eur(maintY)}</dd>
+        <dt>Tanken ${y}</dt><dd>${eur(fuelY)}</dd>
+        <dt>Versicherung/Jahr</dt><dd>${eur(insY)}</dd>
+        ${fs.cons?`<dt>Ø Verbrauch</dt><dd>${num(fs.cons,1)} l/100 km</dd>`:""}
+        ${fs.last?`<dt>Letzte Füllung</dt><dd>${num(fs.last,1)} l/100 km</dd>`:""}
+        ${fs.costKm?`<dt>Spritkosten</dt><dd>${num(fs.costKm*100,2)} € / 100 km</dd>`:""}
+      </dl>
+      ${filesView(v.files)}
+      ${done.length?`<details><summary>Werkstatt-Verlauf (${done.length})</summary><div class="hist">${done.map(t=>`<div><span>${fmtD(t.doneDate)} · ${esc(t.title||kindLabel(t))}</span><span>${t.cost?eur(t.cost):"–"}</span></div>`).join("")}<div class="sum"><span>Summe</span><span>${eur(total)}</span></div></div></details>`:""}
+      ${fuel.length?`<details><summary>Tankbuch (${fuel.length})</summary><div class="hist">${fuel.slice(0,30).map(f=>`<div><span>${fmtD(f.date)} · ${num(f.liters,2)} l${f.km?" · "+num(f.km)+" km":""}</span><span><button class="btn ghost" style="padding:0 4px" data-act="editFuel" data-id="${f.id}">${eur(f.cost)}</button></span></div>`).join("")}</div></details>`:""}
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn primary" data-act="addTask" data-veh="${v.id}">+ Aufgabe</button>
+        <button class="btn" data-act="addFuel" data-veh="${v.id}">Tanken</button>
+        <button class="btn ghost" data-act="editVehicle" data-id="${v.id}">Bearbeiten</button>
+      </div></div>`;
+  }).join("") + `</div>`;
+  return h;
+}
+
+function vContracts(){
+  const list = fContracts().filter(c => (c.cat||"ins") === contractView).sort((a,b)=>a.type.localeCompare(b.type));
+  const tot = list.reduce((a,c)=>a+yearly(c),0);
+  let h = `<div class="bar"><h2>Verträge</h2>
+    <div class="seg"><button data-act="cv" data-v="ins" aria-pressed="${contractView==="ins"}">Versicherungen</button><button data-act="cv" data-v="abo" aria-pressed="${contractView==="abo"}">Abos & Verträge</button></div></div>`;
+  if(!list.length) return h + empty(contractView==="ins"?"Noch keine Versicherungen eingetragen.":"Noch keine Abos oder Verträge eingetragen (Handy, Strom, Internet, Streaming …).","addContract", contractView==="ins"?"Versicherung hinzufügen":"Vertrag hinzufügen");
+  const groups = {};
+  list.forEach(c => { const k = c.memberId || vehicleMember(c.vehicleId) || ""; (groups[k] = groups[k]||[]).push(c); });
+  h += `<p class="sub" style="margin:0 0 10px">Gesamt: <b>${eur(tot)}</b> pro Jahr · <b>${eur(tot/12)}</b> pro Monat</p>`;
+  Object.entries(groups).forEach(([mid,arr]) => {
+    const m = member(mid), s = arr.reduce((a,c)=>a+yearly(c),0);
+    h += `<h3 style="margin:18px 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">${m?`<span class="dot" style="background:${m.color}"></span>${esc(m.name)}`:"Ganze Familie"} <span class="sub" style="font-family:var(--body);font-weight:500">${eur(s)}/Jahr</span></h3>
+      <div class="list">${arr.map(contractRow).join("")}</div>`;
+  });
+  return h;
+}
+
+function vDocs(){
+  const list = fDocs().slice().sort((a,b)=>(a.expiry||"9999").localeCompare(b.expiry||"9999"));
+  let h = `<div class="bar"><h2>Dokumente & Ausweise</h2><button class="btn" data-act="addDoc">+ Dokument</button></div>
+    <p class="sub" style="margin:-4px 0 12px">Die App erinnert rechtzeitig vor dem Ablauf, beim Reisepass 6 Monate vorher, weil viele Länder diese Restgültigkeit verlangen.</p>`;
+  return h + (list.length ? `<div class="list">${list.map(docRow).join("")}</div>` : empty("Noch keine Dokumente eingetragen. Reisepass, Personalausweis, Führerschein, E-Card …","addDoc","Dokument hinzufügen"));
+}
+
+function vMore(){
+  let h = `<div class="bar" style="margin-top:4px"><div class="seg">
+    ${[["family","Familie"],["stats","Auswertung"],["backup","Export & Import"],["install","Als App nutzen"]].map(([k,l])=>`<button data-act="mv" data-v="${k}" aria-pressed="${moreView===k}">${l}</button>`).join("")}
+  </div></div>`;
+  return h + ({family:vFamily, stats:vStats, backup:vBackup, install:vInstall}[moreView])();
+}
+function vFamily(){
+  let h = `<div class="bar"><h2>Familie</h2><button class="btn" data-act="addMember">+ Person</button></div>`;
+  if(!S.members.length) return h + empty("Noch niemand eingetragen. Leg alle Familienmitglieder an, damit du alles zuordnen kannst.","addMember","Person hinzufügen");
+  const y = new Date().getFullYear();
+  return h + `<div class="grid">` + S.members.map(m => {
+    const vs = S.vehicles.filter(v=>v.memberId===m.id);
+    const ts = S.tasks.filter(t => t.memberId===m.id || (t.vehicleId && vehicleMember(t.vehicleId)===m.id));
+    const cs = S.contracts.filter(c => c.memberId===m.id || (c.vehicleId && vehicleMember(c.vehicleId)===m.id));
+    const docs = S.docs.filter(d => d.memberId===m.id);
+    return `<div class="card">
+      <h3 style="display:flex;align-items:center;gap:10px"><span class="dot" style="background:${m.color};width:14px;height:14px"></span>${esc(m.name)}</h3>
+      <dl class="kv">
+        <dt>Fahrzeuge</dt><dd>${vs.length?vs.map(v=>esc(v.name)).join(", "):"–"}</dd>
+        <dt>Offene Aufgaben</dt><dd>${ts.filter(t=>!t.done).length}</dd>
+        <dt>Verträge</dt><dd>${cs.length} · ${eur(cs.reduce((a,c)=>a+yearly(c),0))}/Jahr</dd>
+        <dt>Dokumente</dt><dd>${docs.length}</dd>
+      </dl>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn" data-act="showMember" data-id="${m.id}">Nur ${esc(m.name)} anzeigen</button>
+        <button class="btn ghost" data-act="editMember" data-id="${m.id}">Bearbeiten</button>
+      </div></div>`;
+  }).join("") + `</div>`;
+}
+function bars(entries){
+  const max = Math.max(1, ...entries.map(e=>e[1]));
+  return `<div class="bars">${entries.map(([l,v,c])=>`<div class="b"><span>${l}</span><div class="track"><div class="fill" style="width:${(v/max*100).toFixed(1)}%;${c?`background:${c}`:""}"></div></div><b>${eur(v)}</b></div>`).join("")}</div>`;
+}
+function vStats(){
+  const Y = statYear;
+  const tDone = fTasks().filter(t=>t.done), fuel = fFuel(), cons = fContracts();
+  const years = [...new Set([new Date().getFullYear(), ...tDone.map(t=>yearOf(t.doneDate)), ...fuel.map(f=>yearOf(f.date))].filter(Boolean))].sort((a,b)=>b-a);
+  const inY = s => yearOf(s) === Y;
+  const months = Array(12).fill(0);
+  tDone.filter(t=>inY(t.doneDate)).forEach(t => months[Number(t.doneDate.slice(5,7))-1] += Number(t.cost)||0);
+  fuel.filter(f=>inY(f.date)).forEach(f => months[Number(f.date.slice(5,7))-1] += Number(f.cost)||0);
+  const mMax = Math.max(1,...months);
+  const catSum = c => tDone.filter(t=>inY(t.doneDate) && catOf(t)===c).reduce((a,t)=>a+(Number(t.cost)||0),0);
+  const fuelY = fuel.filter(f=>inY(f.date)).reduce((a,f)=>a+(Number(f.cost)||0),0);
+  const insY = cons.filter(c=>c.cat!=="abo").reduce((a,c)=>a+yearly(c),0);
+  const aboY = cons.filter(c=>c.cat==="abo").reduce((a,c)=>a+yearly(c),0);
+  const byCat = [["Auto – Werkstatt",catSum("auto")],["Auto – Tanken",fuelY],["Haus & Wohnung",catSum("haus")],["Gesundheit",catSum("gesundheit")],["Sonstiges",catSum("sonst")],["Versicherungen*",insY],["Abos & Verträge*",aboY]];
+  const total = byCat.reduce((a,e)=>a+e[1],0);
+  const byVeh = fVeh().map(v => [esc(v.name),
+    tDone.filter(t=>t.vehicleId===v.id && inY(t.doneDate)).reduce((a,t)=>a+(Number(t.cost)||0),0)
+    + fuel.filter(f=>f.vehicleId===v.id && inY(f.date)).reduce((a,f)=>a+(Number(f.cost)||0),0)
+    + S.contracts.filter(c=>c.vehicleId===v.id).reduce((a,c)=>a+yearly(c),0)]).sort((a,b)=>b[1]-a[1]);
+  const byMem = S.members.filter(m=>filter==="all"||m.id===filter).map(m => [`<span class="dot" style="background:${m.color}"></span> ${esc(m.name)}`,
+    tDone.filter(t=>inY(t.doneDate) && (t.memberId===m.id || (t.vehicleId && vehicleMember(t.vehicleId)===m.id))).reduce((a,t)=>a+(Number(t.cost)||0),0)
+    + fuel.filter(f=>inY(f.date) && vehicleMember(f.vehicleId)===m.id).reduce((a,f)=>a+(Number(f.cost)||0),0)
+    + S.contracts.filter(c=>c.memberId===m.id || (c.vehicleId && vehicleMember(c.vehicleId)===m.id)).reduce((a,c)=>a+yearly(c),0), m.color]).sort((a,b)=>b[1]-a[1]);
+  const yearTotals = years.slice(0,6).reverse().map(y => [y, tDone.filter(t=>yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0) + fuel.filter(f=>yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0)]);
+  const yMax = Math.max(1,...yearTotals.map(e=>e[1]));
+  return `<div class="bar"><h2>Auswertung</h2><div class="seg">${years.map(y=>`<button data-act="sy" data-v="${y}" aria-pressed="${y===Y}">${y}</button>`).join("")}</div></div>
+    <div class="stats" style="margin-bottom:12px"><div class="stat"><b>${eur(total)}</b><span>Gesamtkosten ${Y}</span></div><div class="stat"><b>${eur(total/12)}</b><span>pro Monat im Schnitt</span></div></div>
+    <div class="panel"><h3>Ausgaben pro Monat ${Y}</h3><div class="cols">${months.map((v,i)=>`<div class="c" title="${MONTHS[i]}: ${eur(v)}"><i style="height:${(v/mMax*100).toFixed(1)}%"></i><span>${MONTHS[i]}</span></div>`).join("")}</div><p class="sub" style="margin:8px 0 0">Erledigte Aufgaben und Tanken, ohne Verträge.</p></div>
+    <div class="panel"><h3>Nach Bereich</h3>${bars(byCat)}<p class="sub" style="margin:8px 0 0">* Verträge nach aktuellen Prämien hochgerechnet aufs Jahr.</p></div>
+    ${byVeh.length?`<div class="panel"><h3>Pro Fahrzeug (inkl. Versicherung)</h3>${bars(byVeh)}</div>`:""}
+    ${byMem.length?`<div class="panel"><h3>Pro Person</h3>${bars(byMem)}</div>`:""}
+    ${yearTotals.length>1?`<div class="panel"><h3>Jahresvergleich (Aufgaben & Tanken)</h3><div class="cols">${yearTotals.map(([y,v])=>`<div class="c" title="${y}: ${eur(v)}"><i style="height:${(v/yMax*100).toFixed(1)}%"></i><span>${y}</span></div>`).join("")}</div></div>`:""}`;
+}
+function vBackup(){
+  const ok = true, lb = lastBackup();
+  return `<h2>Export & Import</h2>
+    <div class="panel prose"><p>Alle Daten und Fotos sind <b>nur in diesem Browser auf diesem Gerät</b> gespeichert. Es wird nichts ins Internet übertragen.</p>
+      <p>Wenn du die Browserdaten löschst, das Handy wechselst oder es verlierst, sind die Daten weg. Exportiere deshalb regelmäßig und heb die Datei gut auf, z. B. am PC oder auf einem USB-Stick.</p>
+      <p>${lb?`Letzter Export: <b>${fmtD(lb)}</b>`:"<b>Du hast noch keinen Export gemacht.</b>"}</p></div>
+    <div class="grid">
+      <div class="card"><h3>Exportieren</h3><p class="sub" style="margin:0">Speichert alles in einer Datei. Damit kannst du die Daten auf ein anderes Gerät übertragen oder später wiederherstellen.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn primary" data-act="exportJson" data-v="1" ${ok?"":"disabled"}>Mit Fotos exportieren</button>
+        <button class="btn" data-act="exportJson" data-v="0" ${ok?"":"disabled"}>Ohne Fotos (kleiner)</button></div></div>
+      <div class="card"><h3>Importieren</h3><p class="sub" style="margin:0">Lädt eine exportierte Datei. Du kannst sie zu den vorhandenen Daten dazufügen oder alles damit ersetzen.</p>
+        <label class="btn" style="align-self:flex-start">Datei importieren<input type="file" id="importJson" accept="application/json,.json" hidden></label></div>
+      <div class="card"><h3>Excel-Export</h3><p class="sub" style="margin:0">Alle Aufgaben, Kosten, Verträge, Ausweise, Fahrzeuge und das Tankbuch als Excel-Tabelle zum Nachschauen oder für die Arbeitnehmerveranlagung. Kann nicht wieder importiert werden.</p>
+        <button class="btn" data-act="exportXlsx" ${ok?"":"disabled"} style="align-self:flex-start">Excel herunterladen</button></div>
+    </div>
+    ${ok?"":`<p class="sub">Herunterladen ist nur in der veröffentlichten App möglich.</p>`}
+    <p class="sub" id="exportMsg" role="status"></p>`;
+}
+function vInstall(){
+  return `<h2>Als App am Handy</h2><div class="panel prose">
+    <p><b>iPhone (Safari):</b> Seite öffnen, unten auf „Teilen“ tippen, dann „Zum Home-Bildschirm“.</p>
+    <p><b>Android (Chrome):</b> Seite öffnen, oben rechts auf die drei Punkte tippen, dann „App installieren“ bzw. „Zum Startbildschirm hinzufügen“.</p>
+    <p>Danach startet die Zettelwirtschaft mit eigenem Symbol wie eine richtige App und funktioniert auch ohne Internet.</p>
+    <p><b>Wichtig:</b> Die Daten bleiben in genau dem Browser, in dem du sie eingibst. Am iPhone hat die App am Home-Bildschirm einen eigenen Speicher, getrennt von Safari. Nutze die Zettelwirtschaft daher immer auf dem gleichen Weg und übertrage Daten auf andere Geräte mit Export und Import.</p>
+    <p><b>Erinnerungen:</b> Bei jeder offenen Aufgabe, jedem Vertrag und jedem Ausweis gibt es den Knopf „Kalender“. Damit trägst du den Termin in den Google Kalender ein und bekommst eine Benachrichtigung am Handy.</p></div>`;
+}
+
+/* ================= Render ================= */
+function render(){
+  if(filter!=="all" && !member(filter)) filter = "all";
+  document.getElementById("chips").innerHTML = S.members.length
+    ? `<button class="chip" data-act="filter" data-id="all" aria-pressed="${filter==="all"}">Alle</button>` +
+      S.members.map(m=>`<button class="chip" data-act="filter" data-id="${m.id}" aria-pressed="${filter===m.id}"><span class="dot" style="background:${m.color}"></span>${esc(m.name)}</button>`).join("")
+    : "";
+  document.getElementById("tabs").innerHTML = TABS.map(([k,l])=>`<button data-act="tab" data-v="${k}" ${tab===k?'aria-current="page"':""}>${ICONS[k]}<span>${l}</span></button>`).join("");
+  const V = {overview:vOverview,tasks:vTasks,vehicles:vVehicles,contracts:vContracts,docs:vDocs,more:vMore}[tab];
+  document.getElementById("view").innerHTML = V();
+  const fab = document.getElementById("fab");
+  const fl = {overview:"+ Aufgabe",tasks:"+ Aufgabe",vehicles:"+ Fahrzeug",contracts:contractView==="ins"?"+ Versicherung":"+ Vertrag",docs:"+ Dokument",more:moreView==="family"?"+ Person":""}[tab];
+  fab.hidden = !fl; fab.textContent = fl;
+  const imp = document.getElementById("importJson"); if(imp) imp.onchange = importJson;
+  hydrate(document.getElementById("view"));
+}
+
+/* ================= Formulare ================= */
+const dlg = document.getElementById("dlg"), dlgInner = document.getElementById("dlgInner");
+function memberOpts(sel){ return `<option value="">– ganze Familie –</option>` + S.members.map(m=>`<option value="${m.id}" ${m.id===sel?"selected":""}>${esc(m.name)}</option>`).join(""); }
+function vehOpts(sel){ return `<option value="">– kein Fahrzeug –</option>` + S.vehicles.map(v=>`<option value="${v.id}" ${v.id===sel?"selected":""}>${esc(v.name)}${v.plate?" ("+esc(v.plate)+")":""}</option>`).join(""); }
+function fld(label, inner, full){ const id = (inner.match(/id="([^"]+)"/)||[])[1]||""; return `<div class="fld ${full?"full":""}"><label for="${id}">${label}</label>${inner}</div>`; }
+function filesBlock(){
+  return `<div class="fld full"><label>Belege & Fotos</label><div class="files" id="fList"></div>
+    ${window.indexedDB?`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px"><label class="btn">+ Foto / PDF<input type="file" id="fIn" accept="image/*,application/pdf" multiple hidden></label><span class="sub" id="fState" role="status"></span></div>`
+      :`<p class="hint">Dieser Browser kann keine Fotos speichern.</p>`}</div>`;
+}
+async function compress(file){
+  if(!file.type.startsWith("image/") || /gif|svg/.test(file.type)) return file;
+  try{
+    const bmp = await createImageBitmap(file);
+    const s = Math.min(1, 1800/Math.max(bmp.width,bmp.height));
+    if(s === 1 && file.size < 1.5e6 && /jpeg|png|webp/.test(file.type)) return file;
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width*s); c.height = Math.round(bmp.height*s);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    return await new Promise(r => c.toBlob(b => r(b||file), "image/jpeg", 0.85));
+  }catch(e){ return file; }
+}
+function wireFiles(list){
+  const box = dlgInner.querySelector("#fList"); if(!box) return;
+  const draw = () => {
+    box.innerHTML = list.map((f,i) => `<div class="th">${f.type&&f.type.startsWith("image/")?`<img data-fid="${f.id}" alt="${esc(f.name)}">`:"PDF"}<button type="button" class="rm" data-i="${i}" aria-label="${esc(f.name)} entfernen">×</button></div>`).join("");
+    hydrate(box);
+  };
+  box.onclick = e => { const b = e.target.closest(".rm"); if(b){ list.splice(Number(b.dataset.i),1); draw(); } };
+  draw();
+  const inp = dlgInner.querySelector("#fIn"), st = dlgInner.querySelector("#fState");
+  if(!inp) return;
+  inp.onchange = async () => {
+    const files = [...inp.files]; inp.value = "";
+    for(const f of files){
+      st.textContent = `Speichert „${f.name}“ …`;
+      try{
+        const blob = await compress(f);
+        const type = blob.type || (f.name.toLowerCase().endsWith(".pdf") ? "application/pdf" : "");
+        if(!/^image\/(jpeg|png|webp|gif)$|^application\/pdf$/.test(type)){ st.textContent = `„${f.name}“ hat ein Format, das nicht gespeichert werden kann. Bitte als JPG, PNG oder PDF.`; continue; }
+        const id = uid();
+        await IDB.put(id, {type, data: await blob.arrayBuffer()});
+        list.push({id, name:f.name, type}); requestPersist();
+        draw(); st.textContent = "";
+      }catch(e){
+        st.textContent = e && e.name === "QuotaExceededError" ? "Der Speicher des Geräts ist voll." : `„${f.name}“ konnte nicht gespeichert werden.`;
+      }
+    }
+  };
+}
+function openDlg(title, body, onSave, onDelete, saveLabel="Speichern"){
+  dlgInner.innerHTML = `<div class="dlg-h"><h3>${title}</h3></div><div class="dlg-b">${body}<p class="err" id="dErr" hidden></p></div>
+    <div class="dlg-f">${onDelete?`<button class="btn danger" id="dDel" style="margin-right:auto">Löschen</button>`:""}<button class="btn" id="dCancel">Abbrechen</button><button class="btn primary" id="dSave">${saveLabel}</button></div>`;
+  dlg.showModal();
+  const first = dlgInner.querySelector("input:not([type=file]):not([type=checkbox]),select,textarea"); if(first) first.focus();
+  const q = id => dlgInner.querySelector("#"+id);
+  q("dCancel").onclick = () => dlg.close();
+  q("dSave").onclick = () => {
+    const err = onSave(q);
+    if(err){ const e = q("dErr"); e.textContent = err; e.hidden = false; return; }
+    dlg.close(); save();
+  };
+  if(onDelete) q("dDel").onclick = () => { if(confirm("Wirklich löschen?")){ onDelete(); dlg.close(); save(); } };
+}
+const val = (q,id) => (q(id)?.value || "").trim();
+const presetMember = () => filter!=="all" ? filter : "";
+
+function formMember(m){
+  const isNew = !m; m = m || {name:"", color:COLORS[S.members.length % COLORS.length]};
+  let color = m.color;
+  openDlg(isNew?"Person hinzufügen":"Person bearbeiten",
+    fld("Name",`<input id="fName" value="${esc(m.name)}" placeholder="z. B. Mama, Lukas …">`,true) +
+    `<div class="fld full"><label>Farbe</label><div class="swatches" id="sw">${COLORS.map(c=>`<button type="button" data-c="${c}" style="background:${c}" aria-label="Farbe ${c}" aria-pressed="${c===color}"></button>`).join("")}</div></div>`,
+    q => {
+      const name = val(q,"fName"); if(!name) return "Bitte einen Namen eingeben.";
+      if(isNew) S.members.push({id:uid(), name, color}); else Object.assign(m,{name,color});
+    },
+    isNew ? null : () => {
+      S.members = S.members.filter(x=>x.id!==m.id);
+      [S.vehicles,S.tasks,S.contracts,S.docs].forEach(a=>a.forEach(x=>{ if(x.memberId===m.id) x.memberId=""; }));
+    });
+  dlgInner.querySelector("#sw").onclick = e => {
+    const b = e.target.closest("button[data-c]"); if(!b) return;
+    color = b.dataset.c; dlgInner.querySelectorAll("#sw button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+  };
+}
+
+function formVehicle(v){
+  const isNew = !v; v = v || {name:"",plate:"",memberId:presetMember(),year:"",km:"",notes:"",files:[]};
+  const files = [...(v.files||[])];
+  openDlg(isNew?"Fahrzeug hinzufügen":"Fahrzeug bearbeiten",
+    fld("Bezeichnung",`<input id="vName" value="${esc(v.name)}" placeholder="z. B. VW Golf">`) +
+    fld("Kennzeichen",`<input id="vPlate" value="${esc(v.plate)}" placeholder="G-123AB">`) +
+    fld("Gehört zu",`<select id="vMem">${memberOpts(v.memberId)}</select>`) +
+    fld("Baujahr",`<input id="vYear" inputmode="numeric" value="${esc(v.year)}">`) +
+    fld("km-Stand",`<input id="vKm" type="number" min="0" value="${esc(v.km)}">`) +
+    fld("Notizen",`<textarea id="vNotes" placeholder="z. B. Reifengröße, Werkstatt, Telefonnummer …">${esc(v.notes)}</textarea>`,true) +
+    filesBlock() + `<p class="hint">Tipp: Zulassungsschein und Reifen-Einlagerungsschein abfotografieren.</p>`,
+    q => {
+      const d = {name:val(q,"vName"), plate:val(q,"vPlate").toUpperCase(), memberId:q("vMem").value, year:val(q,"vYear"), km:val(q,"vKm"), notes:val(q,"vNotes"), files};
+      if(!d.name) return "Bitte eine Bezeichnung eingeben.";
+      if(isNew) S.vehicles.push({id:uid(),...d}); else Object.assign(v,d);
+    },
+    isNew ? null : () => {
+      S.vehicles = S.vehicles.filter(x=>x.id!==v.id);
+      S.tasks = S.tasks.filter(t=>t.vehicleId!==v.id);
+      S.fuel = S.fuel.filter(f=>f.vehicleId!==v.id);
+      S.contracts.forEach(c=>{ if(c.vehicleId===v.id) c.vehicleId=""; });
+    });
+  wireFiles(files);
+}
+
+function kindOpts(sel){
+  return Object.entries(CATS).map(([c,l]) => `<optgroup label="${l}">${Object.entries(KINDS).filter(([,o])=>o.c===c).map(([k,o])=>`<option value="${k}" ${k===sel?"selected":""}>${o.l}</option>`).join("")}</optgroup>`).join("");
+}
+function repHint(kind){
+  if(kind==="reifen") return "Nächster Wechsel wird automatisch vorgeschlagen: Mitte Oktober bzw. Anfang April.";
+  if(kind==="vignette") return "Nächste Vignette wird automatisch für Ende Jänner vorgeschlagen (die alte gilt bis 31. Jänner).";
+  if(kind==="pickerl") return "Als Datum den Monat eintragen, der auf der Plakette gelocht ist. Machen lassen kann man das Pickerl ab einem Monat davor bis vier Monate danach.";
+  return "";
+}
+function formTask(t, preset={}){
+  const isNew = !t;
+  const defKind = preset.vehicleId ? "pickerl" : (taskCat==="haus"?"therme":taskCat==="gesundheit"?"vorsorge":taskCat==="sonst"?"sonst":"pickerl");
+  t = t || {kind:defKind, title:"", due:"", memberId: preset.vehicleId ? "" : presetMember(), vehicleId: preset.vehicleId||"", notes:"", done:false, files:[]};
+  const files = [...(t.files||[])];
+  const rep = t.rep ?? KINDS[t.kind]?.m ?? 0;
+  openDlg(isNew?"Aufgabe hinzufügen":"Aufgabe bearbeiten",
+    fld("Art",`<select id="tKind">${kindOpts(t.kind)}</select>`) +
+    fld("Fällig am",`<input id="tDue" type="date" value="${esc(t.due)}">`) +
+    `<p class="hint" id="tHint">${repHint(t.kind)}</p>` +
+    fld("Titel (optional)",`<input id="tTitle" value="${esc(t.title)}" placeholder="z. B. Winterreifen drauf, Kontrolle Dr. Huber">`,true) +
+    fld("Fahrzeug",`<select id="tVeh">${vehOpts(t.vehicleId)}</select>`) +
+    fld("Person",`<select id="tMem">${memberOpts(t.memberId)}</select>`) +
+    fld("Wiederholen alle … Monate",`<input id="tRep" type="number" min="0" max="120" value="${esc(rep)}" placeholder="0 = nicht wiederholen">`) +
+    (t.done ? fld("Erledigt am",`<input id="tDone" type="date" value="${esc(t.doneDate)}">`) + fld("Kosten (€)",`<input id="tCost" type="number" step="0.01" min="0" value="${esc(t.cost)}">`) : "") +
+    fld("Notizen",`<textarea id="tNotes">${esc(t.notes)}</textarea>`,true) + filesBlock(),
+    q => {
+      const d = {kind:q("tKind").value, title:val(q,"tTitle"), due:q("tDue").value, vehicleId:q("tVeh").value, memberId:q("tMem").value, notes:val(q,"tNotes"), rep:Number(val(q,"tRep"))||0, files};
+      if(t.done){ d.doneDate = q("tDone").value; d.cost = val(q,"tCost"); }
+      if(isNew) S.tasks.push({id:uid(),done:false,...d}); else Object.assign(t,d);
+    },
+    isNew ? null : () => { S.tasks = S.tasks.filter(x=>x.id!==t.id); });
+  const k = dlgInner.querySelector("#tKind");
+  k.onchange = () => { dlgInner.querySelector("#tRep").value = KINDS[k.value].m; dlgInner.querySelector("#tHint").textContent = repHint(k.value); };
+  wireFiles(files);
+}
+
+function formDone(t){
+  const rep = t.rep ?? KINDS[t.kind]?.m ?? 0;
+  const base = todayStr(), v = vehicle(t.vehicleId);
+  const files = [...(t.files||[])];
+  const nd0 = nextDue(t.kind, base, rep) || "";
+  openDlg(`Erledigt: ${esc(t.title || kindLabel(t))}`,
+    fld("Erledigt am",`<input id="dDate" type="date" value="${base}">`) +
+    fld("Kosten (€)",`<input id="dCost" type="number" step="0.01" min="0" placeholder="0,00">`) +
+    (v ? fld("km-Stand",`<input id="dKm" type="number" min="0" value="${esc(v.km||"")}">`) : "") +
+    fld("Notiz",`<input id="dNote" placeholder="z. B. Werkstatt, Mängel …">`, !v) +
+    `<label class="check"><input type="checkbox" id="dNext" ${nd0?"checked":""}> Nächsten Termin gleich anlegen</label>` +
+    fld(t.kind==="pickerl"?"Nächstes Pickerl (Monat auf der neuen Plakette)":"Nächster Termin",`<input id="dNextDate" type="date" value="${nd0}">`,true) +
+    filesBlock() + `<p class="hint">Tipp: Rechnung abfotografieren – praktisch für Garantie und Steuer.</p>`,
+    q => {
+      const nextOn = q("dNext").checked, nd = q("dNextDate").value;
+      if(nextOn && !nd) return "Bitte ein Datum für den nächsten Termin eingeben oder das Häkchen entfernen.";
+      t.done = true; t.doneDate = q("dDate").value || base; t.cost = val(q,"dCost"); t.files = files;
+      const note = val(q,"dNote"); if(note) t.notes = t.notes ? t.notes+" · "+note : note;
+      if(v && q("dKm")){ const km = val(q,"dKm"); if(km){ t.km = km; if(!v.km || Number(km) > Number(v.km)) v.km = km; } }
+      if(nextOn){
+        let title = t.title;
+        if(t.kind==="reifen" && /winter|sommer/i.test(title||"")) title = /winter/i.test(title) ? "Sommerreifen drauf" : "Winterreifen drauf";
+        S.tasks.push({id:uid(), kind:t.kind, title, due:nd, rep:t.rep, memberId:t.memberId, vehicleId:t.vehicleId, notes:"", done:false, files:[]});
+      }
+    }, null, "Als erledigt speichern");
+  const dd = dlgInner.querySelector("#dDate"), nd = dlgInner.querySelector("#dNextDate");
+  dd.addEventListener("change", () => { if(dd.value){ const n = nextDue(t.kind, dd.value, rep); if(n) nd.value = n; } });
+  wireFiles(files);
+}
+
+function formFuel(f, vid){
+  const isNew = !f; const v = vehicle(f ? f.vehicleId : vid);
+  f = f || {vehicleId:vid, date:todayStr(), liters:"", cost:"", km:"", full:true};
+  openDlg(`Tanken – ${esc(v?.name||"")}`,
+    fld("Datum",`<input id="uDate" type="date" value="${esc(f.date)}">`) +
+    fld("km-Stand",`<input id="uKm" type="number" min="0" value="${esc(f.km)}" placeholder="${esc(v?.km||"")}">`) +
+    fld("Liter",`<input id="uLit" type="number" step="0.01" min="0" value="${esc(f.liters)}">`) +
+    fld("Betrag (€)",`<input id="uCost" type="number" step="0.01" min="0" value="${esc(f.cost)}">`) +
+    `<label class="check"><input type="checkbox" id="uFull" ${f.full!==false?"checked":""}> Vollgetankt</label>` +
+    `<p class="hint">Für den Verbrauch immer vollgetankt eintragen und den km-Stand angeben.</p>`,
+    q => {
+      const d = {date:q("uDate").value||todayStr(), km:Number(val(q,"uKm"))||"", liters:val(q,"uLit"), cost:val(q,"uCost"), full:q("uFull").checked};
+      if(!d.cost && !d.liters) return "Bitte Liter oder Betrag eingeben.";
+      if(isNew) S.fuel.push({id:uid(), vehicleId:f.vehicleId, ...d}); else Object.assign(f,d);
+      if(v && d.km && (!v.km || d.km > Number(v.km))) v.km = String(d.km);
+    },
+    isNew ? null : () => { S.fuel = S.fuel.filter(x=>x.id!==f.id); });
+}
+
+function formContract(c){
+  const isNew = !c;
+  c = c || {cat:contractView, type:contractView==="ins"?"KFZ-Haftpflicht":"Handy", company:"", policy:"", premium:"", freq:"monatlich", memberId:presetMember(), vehicleId:"", renewal:"", notice:"1", autoRenew:true, notes:"", files:[]};
+  const files = [...(c.files||[])];
+  const ins = (c.cat||"ins") === "ins";
+  const types = ins ? INS_TYPES : ABO_TYPES;
+  openDlg(isNew?(ins?"Versicherung hinzufügen":"Vertrag hinzufügen"):(ins?"Versicherung bearbeiten":"Vertrag bearbeiten"),
+    fld("Art",`<select id="iType">${types.map(x=>`<option ${x===c.type?"selected":""}>${x}</option>`).join("")}${types.includes(c.type)?"":`<option selected>${esc(c.type)}</option>`}</select>`) +
+    fld(ins?"Gesellschaft":"Anbieter",`<input id="iComp" value="${esc(c.company)}" placeholder="${ins?"z. B. Uniqa, Wiener Städtische …":"z. B. A1, Magenta, Energie Steiermark …"}">`) +
+    fld(ins?"Polizzennummer":"Vertrags-/Kundennummer",`<input id="iPol" value="${esc(c.policy)}">`) +
+    fld("Betrag (€)",`<input id="iPrem" type="number" step="0.01" min="0" value="${esc(c.premium)}">`) +
+    fld("Zahlweise",`<select id="iFreq">${Object.keys(FREQ).map(f=>`<option ${f===c.freq?"selected":""}>${f}</option>`).join("")}</select>`) +
+    fld("Ablauf / Verlängerung am",`<input id="iRen" type="date" value="${esc(c.renewal)}">`) +
+    fld("Kündigungsfrist",`<select id="iNot">${[["0","keine / jederzeit"],["1","1 Monat"],["2","2 Monate"],["3","3 Monate"],["6","6 Monate"]].map(([v,l])=>`<option value="${v}" ${String(c.notice||"0")===v?"selected":""}>${l}</option>`).join("")}</select>`) +
+    `<label class="check" style="grid-column:auto"><input type="checkbox" id="iAuto" ${c.autoRenew!==false?"checked":""}> Verlängert sich automatisch um 1 Jahr</label>` +
+    fld("Person",`<select id="iMem">${memberOpts(c.memberId)}</select>`) +
+    (ins ? fld("Fahrzeug",`<select id="iVeh">${vehOpts(c.vehicleId)}</select>`) : "") +
+    fld("Notizen",`<textarea id="iNotes" placeholder="z. B. Selbstbehalt, Ansprechpartner, Telefonnummer, Bindung …">${esc(c.notes)}</textarea>`,true) +
+    filesBlock() + `<p class="hint">Die App erinnert dich vor Ablauf der Kündigungsfrist. Die genaue Frist steht in deiner Polizze bzw. im Vertrag.</p>`,
+    q => {
+      const d = {cat:c.cat||"ins", type:q("iType").value, company:val(q,"iComp"), policy:val(q,"iPol"), renewal:q("iRen").value, notice:q("iNot").value, autoRenew:q("iAuto").checked, premium:val(q,"iPrem"), freq:q("iFreq").value, memberId:q("iMem").value, vehicleId: ins ? q("iVeh").value : "", notes:val(q,"iNotes"), files};
+      if(isNew) S.contracts.push({id:uid(),...d}); else Object.assign(c,d);
+    },
+    isNew ? null : () => { S.contracts = S.contracts.filter(x=>x.id!==c.id); });
+  wireFiles(files);
+}
+
+function formDoc(d){
+  const isNew = !d;
+  d = d || {type:"Reisepass", memberId:presetMember(), number:"", expiry:"", notes:"", files:[]};
+  const files = [...(d.files||[])];
+  openDlg(isNew?"Dokument hinzufügen":"Dokument bearbeiten",
+    fld("Art",`<select id="oType">${Object.keys(DOC_TYPES).map(x=>`<option ${x===d.type?"selected":""}>${x}</option>`).join("")}</select>`) +
+    fld("Person",`<select id="oMem">${memberOpts(d.memberId)}</select>`) +
+    fld("Gültig bis",`<input id="oExp" type="date" value="${esc(d.expiry)}">`) +
+    fld("Nummer (optional)",`<input id="oNum" value="${esc(d.number)}">`) +
+    fld("Notizen",`<textarea id="oNotes" placeholder="z. B. Termin bei der BH / beim Magistrat …">${esc(d.notes)}</textarea>`,true) + filesBlock(),
+    q => {
+      const x = {type:q("oType").value, memberId:q("oMem").value, expiry:q("oExp").value, number:val(q,"oNum"), notes:val(q,"oNotes"), files};
+      if(isNew) S.docs.push({id:uid(),...x}); else Object.assign(d,x);
+    },
+    isNew ? null : () => { S.docs = S.docs.filter(x=>x.id!==d.id); });
+  wireFiles(files);
+}
+
+/* ================= Export ================= */
+function exportMsg(t){ const e = document.getElementById("exportMsg"); if(e) e.textContent = t; }
+function loadXLSX(){
+  return new Promise((res,rej) => {
+    if(window.XLSX) return res();
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    s.onload = res; s.onerror = () => rej(new Error("load")); document.head.appendChild(s);
+  });
+}
+const mName = id => member(id)?.name || "";
+const vName = id => vehicle(id) ? vehicle(id).name + (vehicle(id).plate ? " ("+vehicle(id).plate+")" : "") : "";
+const n2 = v => v === "" || v == null ? "" : Number(v);
+async function exportXlsx(){
+  try{
+    exportMsg("Excel wird erstellt …");
+    await loadXLSX();
+    const wb = XLSX.utils.book_new();
+    const add = (name, rows) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length?rows:[{Hinweis:"Keine Einträge"}]), name);
+    add("Aufgaben", S.tasks.map(t => ({Bereich:CATS[catOf(t)], Art:kindLabel(t), Titel:t.title||"", Fahrzeug:vName(t.vehicleId), Person:mName(t.memberId||vehicleMember(t.vehicleId)), "Fällig":t.due||"", Status:t.done?"erledigt":"offen", "Erledigt am":t.doneDate||"", "Kosten (€)":n2(t.cost), "km-Stand":n2(t.km), Notizen:t.notes||""})));
+    add("Verträge", S.contracts.map(c => ({Gruppe:c.cat==="abo"?"Abo/Vertrag":"Versicherung", Art:c.type, Anbieter:c.company||"", Nummer:c.policy||"", Person:mName(c.memberId||vehicleMember(c.vehicleId)), Fahrzeug:vName(c.vehicleId), "Betrag (€)":n2(c.premium), Zahlweise:c.freq, "Pro Jahr (€)":yearly(c), "Ablauf/Verlängerung":effRenewal(c), "Kündigen bis":deadline(c), Notizen:c.notes||""})));
+    add("Dokumente", S.docs.map(d => ({Art:d.type, Person:mName(d.memberId), "Gültig bis":d.expiry||"", Nummer:d.number||"", Notizen:d.notes||""})));
+    add("Fahrzeuge", S.vehicles.map(v => ({Bezeichnung:v.name, Kennzeichen:v.plate||"", Person:mName(v.memberId), Baujahr:v.year||"", "km-Stand":n2(v.km), Notizen:v.notes||""})));
+    add("Tankbuch", S.fuel.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(f => ({Datum:f.date, Fahrzeug:vName(f.vehicleId), Liter:n2(f.liters), "Betrag (€)":n2(f.cost), "km-Stand":n2(f.km), Vollgetankt:f.full!==false?"ja":"nein"})));
+    add("Familie", S.members.map(m => ({Name:m.name})));
+    const buf = XLSX.write(wb, {bookType:"xlsx", type:"array"});
+    await saveFile(`Zettelwirtschaft-${todayStr()}.xlsx`, new Blob([buf], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+    exportMsg("");
+  }catch(e){
+    exportMsg(e && e.code === "declined" ? "" : e && e.message === "load" ? "Excel-Funktion konnte nicht geladen werden. Bitte später erneut versuchen." : "Export hat nicht geklappt. Bitte erneut versuchen.");
+  }
+}
+function bufToB64(buf){ const b = new Uint8Array(buf); let s = ""; for(let i=0;i<b.length;i+=0x8000) s += String.fromCharCode.apply(null, b.subarray(i,i+0x8000)); return btoa(s); }
+function b64ToBuf(b64){ const s = atob(b64); const u = new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i] = s.charCodeAt(i); return u.buffer; }
+async function exportJson(withFiles){
+  try{
+    exportMsg("Export wird erstellt …");
+    const files = {};
+    if(withFiles) for(const id of usedFileIds()){ const r = await IDB.get(id).catch(()=>null); if(r) files[id] = {type:r.type, data:bufToB64(r.data)}; }
+    const payload = JSON.stringify({app:"zettelwirtschaft", version:3, exportiert:new Date().toISOString(), data:S, files});
+    await saveFile(`Zettelwirtschaft-Export-${todayStr()}${withFiles?"":"-ohne-Fotos"}.json`, new Blob([payload], {type:"application/json"}));
+    try{ localStorage.setItem(BKEY, todayStr()); }catch(e){}
+    render(); exportMsg("Export gespeichert.");
+  }catch(e){
+    exportMsg(e && e.code === "declined" ? "" : e && e.code === "too_large" ? "Die Datei ist zu groß. Bitte ohne Fotos exportieren." : "Export hat nicht geklappt. Bitte erneut versuchen.");
+  }
+}
+function importJson(e){
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    let o, data;
+    try{ o = JSON.parse(r.result); data = o.data || o; if(!data || (!data.members && !data.tasks && !data.vehicles)) throw 0; }
+    catch(err){ exportMsg("Diese Datei ist kein Zettelwirtschaft-Export."); return; }
+    const inc = norm(data), files = o.files || {};
+    let nf = 0;
+    try{ for(const [id,v] of Object.entries(files)){ await IDB.put(id, {type:v.type, data:b64ToBuf(v.data)}); nf++; } }
+    catch(err){ exportMsg("Die Fotos konnten nicht alle übernommen werden – der Speicher des Geräts ist eventuell voll."); }
+    openDlg("Datei importieren",
+      `<p class="hint" style="font-size:14px">In der Datei: ${inc.members.length} Personen, ${inc.vehicles.length} Fahrzeuge, ${inc.tasks.length} Aufgaben, ${inc.contracts.length} Verträge, ${inc.docs.length} Ausweise, ${inc.fuel.length} Tankfüllungen, ${nf} Fotos/PDFs.</p>
+       <label class="check"><input type="radio" name="imode" value="merge" checked> Zu den vorhandenen Daten dazufügen</label>
+       <label class="check"><input type="radio" name="imode" value="replace"> Alle vorhandenen Daten ersetzen</label>
+       <p class="hint">Beim Dazufügen werden gleiche Einträge (z. B. aus einem früheren Export) nicht doppelt angelegt, sondern aktualisiert.</p>`,
+      () => {
+        const mode = dlgInner.querySelector('input[name="imode"]:checked').value;
+        if(mode === "replace") S = inc;
+        else Object.keys(inc).forEach(k => { const m = new Map(S[k].map(x => [x.id, x])); inc[k].forEach(x => m.set(x.id, x)); S[k] = [...m.values()]; });
+      }, null, "Importieren");
+  };
+  r.readAsText(f);
+}
+async function openFile(id, name, type){
+  const viewer = document.getElementById("viewer"), vi = document.getElementById("viewerInner");
+  const b = await blobFor(id), u = b ? await urlFor(id) : null;
+  vi.innerHTML = `<div class="dlg-h"><h3 style="overflow-wrap:anywhere">${esc(name)}</h3></div>
+    <div style="padding:4px 20px">${!b ? `<p class="sub">Diese Datei ist auf diesem Gerät nicht vorhanden.</p>` : type.startsWith("image/") ? `<img src="${u}" alt="${esc(name)}" style="max-width:100%;max-height:65vh;border-radius:8px;display:block;margin:0 auto">` : `<p class="sub">PDF-Dateien können hier nicht angezeigt werden. Lade die Datei herunter, um sie zu öffnen.</p>`}</div>
+    <div class="dlg-f">${b ? `<button class="btn" id="vDl">Herunterladen</button>` : ""}<button class="btn primary" id="vClose">Schließen</button></div>`;
+  viewer.showModal();
+  vi.querySelector("#vClose").onclick = () => viewer.close();
+  const dl = vi.querySelector("#vDl");
+  if(dl) dl.onclick = async () => {
+    const ext = {"image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif","application/pdf":"pdf"}[type] || "jpg";
+    const base = (name || "Beleg").replace(/\.[^.]+$/, "");
+    try{ await saveFile(`${base}.${ext}`, b); }catch(e){}
+  };
+}
+
+/* ================= Ereignisse ================= */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if(!b) return;
+  const a = b.dataset.act, id = b.dataset.id;
+  switch(a){
+    case "tab": tab = b.dataset.v; render(); window.scrollTo(0,0); break;
+    case "filter": filter = id; render(); break;
+    case "tv": taskView = b.dataset.v; render(); break;
+    case "tcat": taskCat = b.dataset.v; render(); break;
+    case "cv": contractView = b.dataset.v; render(); break;
+    case "mv": moreView = b.dataset.v; render(); break;
+    case "sy": statYear = Number(b.dataset.v); render(); break;
+    case "showMember": filter = id; tab = "overview"; render(); window.scrollTo(0,0); break;
+    case "addMember": formMember(); break;
+    case "editMember": formMember(member(id)); break;
+    case "addVehicle": formVehicle(); break;
+    case "editVehicle": formVehicle(vehicle(id)); break;
+    case "addTask": formTask(null, {vehicleId:b.dataset.veh}); break;
+    case "editTask": formTask(byId(S.tasks,id)); break;
+    case "done": formDone(byId(S.tasks,id)); break;
+    case "addFuel": formFuel(null, b.dataset.veh); break;
+    case "editFuel": formFuel(byId(S.fuel,id)); break;
+    case "addContract": formContract(); break;
+    case "editContract": formContract(byId(S.contracts,id)); break;
+    case "addDoc": formDoc(); break;
+    case "editDoc": formDoc(byId(S.docs,id)); break;
+    case "seasonTires": seasonTires(b.dataset.v); break;
+    case "seasonVignette": seasonVignette(); break;
+    case "exportXlsx": exportXlsx(); break;
+    case "exportJson": exportJson(b.dataset.v === "1"); break;
+    case "goBackup": tab = "more"; moreView = "backup"; render(); window.scrollTo(0,0); break;
+    case "openFile": openFile(b.dataset.fid, b.dataset.name, b.dataset.type); break;
+  }
+});
+document.getElementById("fab").onclick = () => {
+  ({overview:()=>formTask(),tasks:()=>formTask(),vehicles:()=>formVehicle(),contracts:()=>formContract(),docs:()=>formDoc(),more:()=>formMember()})[tab]();
+};
+dlg.addEventListener("click", e => { if(e.target === dlg) dlg.close(); });
+
+loadLocal();
+render();
+setSync("Nur auf diesem Gerät gespeichert");
+initCaps();
+if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(() => {});
+document.getElementById("viewer").addEventListener("click", e => { if(e.target.id === "viewer") e.target.close(); });
+</script>
+</body>
+</html>
