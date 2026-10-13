@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zettelwirtschaft</title>
 <meta name="description" content="Pickerl, Reifen, Service, Versicherungen, Verträge und Ausweise der ganzen Familie an einem Ort – alle Daten bleiben lokal am Gerät.">
-<meta name="theme-color" content="#1D5E6A">
+<meta name="theme-color" content="#2D6CDF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Manrope:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Fredoka:wght@500;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#ECEFF2; --paper:#FFFFFF; --ink:#18232E; --muted:#5E6B78; --line:#D5DBE1;
@@ -183,11 +183,188 @@ dialog::backdrop{background:rgba(10,20,28,.5)}
   dialog[open]{animation:pop .16s ease-out}
   @keyframes pop{from{transform:translateY(8px);opacity:0}}
 }
+
+/* ===== Symbole, Begrüßung, Bereiche (alle Designs) ===== */
+:root{--c-auto:#2F6FD0;--c-haus:#D9822B;--c-ges:#2E9A5B;--c-sonst:#7A8592;--c-ins:#7C5CD6;--c-abo:#1E9AA8;--c-doc:#D2477E;--hard:var(--ink);--edge:var(--line)}
+:root[data-theme="dark"]{--c-auto:#6FA3F2;--c-haus:#F0A65C;--c-ges:#5FCB8C;--c-sonst:#A3ADB8;--c-ins:#A98BF2;--c-abo:#55C6D3;--c-doc:#F07BA8;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-auto:#6FA3F2;--c-haus:#F0A65C;--c-ges:#5FCB8C;--c-sonst:#A3ADB8;--c-ins:#A98BF2;--c-abo:#55C6D3;--c-doc:#F07BA8;}}
+.ico{width:34px;height:34px;border-radius:10px;flex:none;display:inline-flex;align-items:center;justify-content:center;color:var(--ic,var(--petrol));background:color-mix(in srgb,var(--ic,var(--petrol)) 15%,var(--paper))}
+.ico svg{width:19px;height:19px}
+h3.ttl{display:flex;align-items:center;gap:10px}
+h3.ttl > span:last-child{min-width:0;overflow-wrap:anywhere}
+.btn svg{width:16px;height:16px;flex:none}
+.skinbtn{margin-left:auto;padding:8px}
+.skinbtn svg{width:22px;height:22px}
+.hello{margin:2px 0 16px}
+.hello .hi{font:700 25px/1.2 var(--display);display:flex;align-items:center;gap:10px}
+.hello .hi svg{width:28px;height:28px;color:var(--amber)}
+.hello .sub{font-size:15px;margin-top:2px}
+.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:14px 0 4px}
+.area{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;min-width:0}
+.area b{display:block;font-size:15px}
+.area span.s{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.area span.s.warn{color:var(--amber);font-weight:700}
+.area span.s.bad{color:var(--red);font-weight:700}
+.ci .ico{margin-right:2px}
+.skins{display:flex;flex-direction:column;gap:10px;padding:8px 20px}
+.skin-opt{display:flex;gap:14px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--paper);text-align:left;cursor:pointer;width:100%}
+.skin-opt[aria-pressed="true"]{border-color:var(--petrol);background:var(--petrol-soft)}
+.skin-opt b{display:block;font-size:16px}
+.skin-opt span{font-size:13px;color:var(--muted)}
+.skin-opt .sw{display:flex;flex:none}
+.skin-opt .sw i{width:22px;height:22px;border-radius:50%;margin-right:-6px;border:2px solid var(--paper);display:block}
+
+/* ===== Design: Sanft ===== */
+:root[data-skin="sanft"]{--bg:#F2F4FA;--paper:#FFFFFF;--ink:#262A3F;--muted:#686D86;--line:#E3E6F0;--petrol:#4F63E3;--petrol-soft:#E6E9FC;--note:#FFF4D6;--note-line:#F2E2AE;--display:"Nunito","Segoe UI",system-ui,sans-serif;--body:"Nunito","Segoe UI",system-ui,sans-serif;--shadow:0 4px 18px rgba(38,42,90,.08)}
+:root[data-skin="sanft"][data-theme="dark"]{--bg:#15172A;--paper:#1F2238;--ink:#ECEEF8;--muted:#A3A8C3;--line:#2E3250;--petrol:#8D9BFF;--petrol-soft:#2A2F5A;--note:#2E2A1C;--note-line:#4A4227;--shadow:0 4px 18px rgba(0,0,0,.25)}
+@media (prefers-color-scheme: dark){:root[data-skin="sanft"]:not([data-theme="light"]){--bg:#15172A;--paper:#1F2238;--ink:#ECEEF8;--muted:#A3A8C3;--line:#2E3250;--petrol:#8D9BFF;--petrol-soft:#2A2F5A;--note:#2E2A1C;--note-line:#4A4227;--shadow:0 4px 18px rgba(0,0,0,.25)}}
+
+[data-skin="sanft"] h1{font-weight:800}
+[data-skin="sanft"] h2,[data-skin="sanft"] .hello .hi{font-weight:800}
+[data-skin="sanft"] :is(.stat,.card,.row,.panel,.empty,.clist,.area){border:0;border-radius:20px;box-shadow:var(--shadow)}
+[data-skin="sanft"] .chip{border:0;box-shadow:var(--shadow)}
+[data-skin="sanft"] .btn{border-radius:999px}
+[data-skin="sanft"] .btn.ghost{background:none}
+[data-skin="sanft"] .seg{border:0;border-radius:999px;box-shadow:var(--shadow);padding:3px}
+[data-skin="sanft"] .seg button{border-radius:999px}
+[data-skin="sanft"] .ico{border-radius:50%}
+[data-skin="sanft"] .area{flex-direction:column;align-items:flex-start;padding:14px}
+[data-skin="sanft"] .area .ico{width:42px;height:42px}
+[data-skin="sanft"] .area .ico svg{width:22px;height:22px}
+[data-skin="sanft"] .ci{border-left:0;padding:11px 14px 11px 4px}
+[data-skin="sanft"] .badge{border-radius:18px;border-width:2px}
+[data-skin="sanft"] .badge::after{border-radius:13px}
+[data-skin="sanft"] .note{transform:none;border:0;border-radius:20px;box-shadow:var(--shadow)}
+[data-skin="sanft"] nav.tabs{left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));border:0;border-radius:26px;box-shadow:0 8px 30px rgba(38,42,90,.18);padding:3px}
+[data-skin="sanft"] nav.tabs button{border-top:0;border-radius:20px;padding:8px 0;font-size:10.5px}
+[data-skin="sanft"] nav.tabs button[aria-current="page"]{background:var(--petrol-soft);color:var(--petrol)}
+[data-skin="sanft"] .fab{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+[data-skin="sanft"] dialog{border-radius:24px}
+[data-skin="sanft"] .fld input,[data-skin="sanft"] .fld select,[data-skin="sanft"] .fld textarea{border-radius:12px;border-color:transparent}
+
+/* ===== Design: Bunt ===== */
+:root[data-skin="bunt"]{--bg:#FFF6E5;--paper:#FFFFFF;--ink:#1E1B2E;--muted:#5B5870;--line:#E9DFC9;--petrol:#2D6CDF;--petrol-soft:#DDE8FB;--note:#FFE7A3;--note-line:#1E1B2E;--edge:#1E1B2E;--hard:#1E1B2E;--c-auto:#2D6CDF;--c-haus:#FF8A1F;--c-ges:#16A970;--c-sonst:#7D8396;--c-ins:#8B5CF6;--c-abo:#0FA3B1;--c-doc:#E8417A;--display:"Fredoka","Nunito",system-ui,sans-serif;--body:"Nunito","Segoe UI",system-ui,sans-serif}
+:root[data-skin="bunt"][data-theme="dark"]{--bg:#1A1726;--paper:#262236;--ink:#F4F1FA;--muted:#B8B3CB;--line:#3A3550;--petrol:#6E9BFF;--petrol-soft:#28335A;--note:#4A3E16;--note-line:#000;--edge:#57507A;--hard:#000;--c-auto:#5D8FFF;--c-haus:#FF9C42;--c-ges:#2DC98A;--c-sonst:#9EA4B7;--c-ins:#A685FF;--c-abo:#2BC3D1;--c-doc:#FF5E95}
+@media (prefers-color-scheme: dark){:root[data-skin="bunt"]:not([data-theme="light"]){--bg:#1A1726;--paper:#262236;--ink:#F4F1FA;--muted:#B8B3CB;--line:#3A3550;--petrol:#6E9BFF;--petrol-soft:#28335A;--note:#4A3E16;--note-line:#000;--edge:#57507A;--hard:#000;--c-auto:#5D8FFF;--c-haus:#FF9C42;--c-ges:#2DC98A;--c-sonst:#9EA4B7;--c-ins:#A685FF;--c-abo:#2BC3D1;--c-doc:#FF5E95}}
+
+[data-skin="bunt"] h1,[data-skin="bunt"] h2,[data-skin="bunt"] h3,[data-skin="bunt"] .hello .hi{font-weight:600}
+[data-skin="bunt"] :is(.stat,.card,.row,.panel,.empty,.clist,.note){border:2px solid var(--edge);border-radius:16px;box-shadow:4px 4px 0 var(--hard)}
+[data-skin="bunt"] .note{transform:rotate(-1deg)}
+[data-skin="bunt"] .chip{border:2px solid var(--edge)}
+[data-skin="bunt"] .btn{border:2px solid var(--edge);border-radius:12px;box-shadow:2px 2px 0 var(--hard)}
+[data-skin="bunt"] .btn:active{transform:translate(2px,2px);box-shadow:none}
+[data-skin="bunt"] .btn.ghost{border-color:transparent;box-shadow:none}
+[data-skin="bunt"] .seg{border:2px solid var(--edge);border-radius:12px}
+[data-skin="bunt"] .ico{border-radius:12px;background:var(--ic);color:#fff}
+[data-skin="bunt"] .area{flex-direction:column;align-items:flex-start;background:var(--ic);border:2px solid var(--edge);border-radius:16px;box-shadow:4px 4px 0 var(--hard);color:#fff;padding:14px}
+[data-skin="bunt"] .area .ico{background:rgba(255,255,255,.25);width:44px;height:44px}
+[data-skin="bunt"] .area .ico svg{width:24px;height:24px}
+[data-skin="bunt"] .area span.s,[data-skin="bunt"] .area span.s.warn,[data-skin="bunt"] .area span.s.bad{color:rgba(255,255,255,.92)}
+[data-skin="bunt"] .area b{font-family:var(--display);font-weight:600;font-size:17px}
+[data-skin="bunt"] .stat b{color:var(--petrol)}
+[data-skin="bunt"] .stat:nth-child(2) b{color:var(--c-haus)} [data-skin="bunt"] .stat:nth-child(3) b{color:var(--c-ins)} [data-skin="bunt"] .stat:nth-child(4) b{color:var(--c-ges)}
+[data-skin="bunt"] .ci{border-left:0;border-top:2px dashed var(--line)}
+[data-skin="bunt"] .ci:first-child{border-top:0}
+[data-skin="bunt"] .ci.late .when,[data-skin="bunt"] .ci.soon .when{border-radius:10px;margin-left:6px;padding:4px 0;width:52px}
+[data-skin="bunt"] .ci.late .when{background:var(--red);color:#fff} [data-skin="bunt"] .ci.late .when small{color:#fff}
+[data-skin="bunt"] .ci.soon .when{background:var(--amber-soft)}
+[data-skin="bunt"] .ci .chk{border:2px solid var(--edge)}
+[data-skin="bunt"] .badge{border-radius:16px}
+[data-skin="bunt"] .badge::after{border-radius:11px}
+[data-skin="bunt"] nav.tabs{border-top:2px solid var(--edge)}
+[data-skin="bunt"] nav.tabs button{border-top:0}
+[data-skin="bunt"] nav.tabs button svg{width:30px;height:30px;padding:4px;border-radius:10px}
+[data-skin="bunt"] nav.tabs button[aria-current="page"] svg{background:var(--petrol);color:#fff}
+[data-skin="bunt"] nav.tabs button[aria-current="page"]{color:var(--ink)}
+[data-skin="bunt"] .fab{border:2px solid var(--edge);box-shadow:4px 4px 0 var(--hard)}
+[data-skin="bunt"] dialog{border:2px solid var(--edge);border-radius:20px}
+
+/* ===== Design: Klar ===== */
+:root[data-skin="klar"]{--bg:#FFFFFF;--paper:#FFFFFF;--ink:#14171A;--muted:#68707A;--line:#E7E9EC;--petrol:#0E8F6E;--petrol-soft:#E2F4EE;--note:#F3F6F4;--note-line:#E7E9EC;--display:"DM Sans","Segoe UI",system-ui,sans-serif;--body:"DM Sans","Segoe UI",system-ui,sans-serif}
+:root[data-skin="klar"][data-theme="dark"]{--bg:#0F1214;--paper:#0F1214;--ink:#ECEFF1;--muted:#98A1AA;--line:#252B30;--petrol:#3CC79F;--petrol-soft:#11302A;--note:#161B1E;--note-line:#252B30}
+@media (prefers-color-scheme: dark){:root[data-skin="klar"]:not([data-theme="light"]){--bg:#0F1214;--paper:#0F1214;--ink:#ECEFF1;--muted:#98A1AA;--line:#252B30;--petrol:#3CC79F;--petrol-soft:#11302A;--note:#161B1E;--note-line:#252B30}}
+
+[data-skin="klar"] h1{font-weight:700;letter-spacing:-.03em}
+[data-skin="klar"] h2{font-weight:700;letter-spacing:-.02em}
+[data-skin="klar"] .hello .hi{font-size:30px;letter-spacing:-.03em}
+[data-skin="klar"] .stats{gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+[data-skin="klar"] .stat{border:0;border-radius:0;background:none;padding:14px 4px}
+[data-skin="klar"] .stat b{font-weight:500}
+[data-skin="klar"] :is(.card,.panel,.empty){border-radius:14px}
+[data-skin="klar"] .list{gap:0}
+[data-skin="klar"] .row{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:14px 0;background:none}
+[data-skin="klar"] .chip{border-radius:8px}
+[data-skin="klar"] .chip[aria-pressed="true"]{background:var(--petrol);border-color:var(--petrol);color:#fff}
+[data-skin="klar"] .ico{border-radius:50%;background:var(--paper);border:1.5px solid var(--ic);position:relative;z-index:1}
+[data-skin="klar"] .area{border-radius:12px}
+[data-skin="klar"] .clist{border:0;background:none;position:relative;border-radius:0}
+[data-skin="klar"] .clist::before{content:"";position:absolute;left:81px;top:14px;bottom:14px;width:2px;background:var(--line)}
+[data-skin="klar"] .ci{border:0;padding:10px 0}
+[data-skin="klar"] .ci .when{text-align:right;padding-right:4px;color:var(--ink)}
+[data-skin="klar"] .ci.late .ico{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+[data-skin="klar"] .ci.soon .ico{border-color:var(--amber)}
+[data-skin="klar"] .ci .chk{border:1.5px solid var(--line)}
+[data-skin="klar"] .badge{border-width:2px}
+[data-skin="klar"] .note{transform:none;border:0;border-radius:14px;box-shadow:none}
+[data-skin="klar"] nav.tabs button{border-top:0;position:relative}
+[data-skin="klar"] nav.tabs button[aria-current="page"]::after{content:"";position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--petrol)}
+[data-skin="klar"] .fab{border-radius:14px}
+
+/* ===== Bedienung: Varianten ===== */
+.menubtn{display:none;padding:8px}
+.menubtn svg{width:24px;height:24px}
+:root[data-nav="liste"] .menubtn{display:inline-flex}
+:root[data-nav="liste"] .logo{display:none}
+:root[data-nav="liste"] #sync{margin-left:48px}
+:root[data-nav="kacheln"] nav.tabs,:root[data-nav="liste"] nav.tabs{display:none}
+:root[data-nav="kacheln"] .fab{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+:root[data-nav="liste"] .fab{left:50%;right:auto;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));width:64px;height:64px;padding:0;border-radius:50%;justify-content:center}
+:root[data-nav="liste"] .fab svg{width:30px;height:30px}
+.fab svg{width:18px;height:18px}
+.backbar{margin:0 0 4px}
+.backbar .btn{padding-left:2px;font-size:15px;color:var(--petrol)}
+.launch{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px}
+.tile{min-height:132px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:16px;border-radius:18px;border:1px solid var(--line);background:var(--paper);cursor:pointer;text-align:left}
+.tile .ico{width:52px;height:52px;border-radius:16px}
+.tile .ico svg{width:28px;height:28px}
+.tile b{display:block;font:700 17px/1.2 var(--display)}
+.tile .s{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.tile .s.warn{color:var(--amber);font-weight:700} .tile .s.bad{color:var(--red);font-weight:700}
+.searchbox{position:relative;margin:4px 0 10px}
+.searchbox svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted)}
+.searchbox input{width:100%;padding:12px 14px 12px 42px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font-size:16px}
+.fgroup{margin:18px 0 6px;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fgroup.bad{color:var(--red)}
+.swipehint{font-size:13px;color:var(--muted);margin:2px 0 0;display:flex;align-items:center;gap:6px}
+.swipehint svg{width:16px;height:16px}
+.ci{touch-action:pan-y;background:var(--paper);transition:transform .18s ease,background .18s ease}
+.ci.swiping{transition:none}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 20px}
+.qbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;border:1px solid var(--line);background:var(--paper);font-weight:600;font-size:13px;cursor:pointer;text-align:center;line-height:1.2}
+.qbtn .ico{width:44px;height:44px;border-radius:14px}
+.qbtn .ico svg{width:24px;height:24px}
+.qhead{grid-column:1/-1;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+dialog#drawer{margin:0;height:100%;max-height:100%;width:min(300px,85vw);border-radius:0 18px 18px 0;padding:calc(14px + env(safe-area-inset-top,0px)) 0 calc(14px + env(safe-area-inset-bottom,0px))}
+.dnav{display:flex;gap:12px;align-items:center;width:100%;padding:10px 18px;background:none;border:0;font-weight:600;font-size:16px;cursor:pointer;text-align:left;color:var(--ink)}
+.dnav[aria-current="page"]{background:var(--petrol-soft);color:var(--petrol)}
+.dnav .ico{width:36px;height:36px}
+[data-skin="sanft"] :is(.tile,.qbtn){border:0;border-radius:22px;box-shadow:var(--shadow)}
+[data-skin="sanft"] .tile .ico{border-radius:50%}
+[data-skin="sanft"] .searchbox input{border:0;border-radius:999px;box-shadow:var(--shadow)}
+[data-skin="bunt"] .tile{background:var(--ic);color:#fff;border:2px solid var(--edge);box-shadow:4px 4px 0 var(--hard)}
+[data-skin="bunt"] .tile .ico{background:rgba(255,255,255,.25)}
+[data-skin="bunt"] .tile b{font-weight:600}
+[data-skin="bunt"] .tile .s,[data-skin="bunt"] .tile .s.warn,[data-skin="bunt"] .tile .s.bad{color:rgba(255,255,255,.92)}
+[data-skin="bunt"] :is(.qbtn,.searchbox input){border:2px solid var(--edge);box-shadow:3px 3px 0 var(--hard)}
+[data-skin="bunt"] .ci{border-left:0}
+[data-skin="klar"] .tile{border-radius:14px}
+[data-skin="klar"] .tile .ico{border-radius:50%}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
+    <button class="btn ghost menubtn" data-act="menu" aria-label="Menü öffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
       <rect width="64" height="64" rx="14" fill="#1D5E6A"/>
       <rect x="17" y="13" width="30" height="38" rx="2" fill="#F3E7C9" transform="rotate(-9 32 32)"/>
@@ -197,6 +374,7 @@ dialog::backdrop{background:rgba(10,20,28,.5)}
       <circle cx="35" cy="40" r="8" fill="#E7B240"/><circle cx="35" cy="40" r="5.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 2"/>
     </svg>
     <h1>Zettelwirtschaft</h1>
+    <button class="btn ghost skinbtn" data-act="skin" aria-label="Aussehen ändern" title="Aussehen ändern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2s-.9-1.4-.9-2.4S14 15 15 15h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/></svg></button>
     <span id="sync">Wird geladen …</span>
   </header>
   <div class="chips" id="chips" role="group" aria-label="Nach Person filtern"></div>
@@ -207,6 +385,7 @@ dialog::backdrop{background:rgba(10,20,28,.5)}
 <nav class="tabs" id="tabs" aria-label="Bereiche"></nav>
 <dialog id="dlg"><div id="dlgInner"></div></dialog>
 <dialog id="viewer"><div id="viewerInner"></div></dialog>
+<dialog id="drawer"><div id="drawerInner"></div></dialog>
 
 <script>
 /* ================= Konstanten ================= */
@@ -245,6 +424,88 @@ const ICONS = {
   more:I('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>')
 };
 const TABS = [["overview","Übersicht"],["tasks","Aufgaben"],["vehicles","Autos"],["contracts","Verträge"],["docs","Ausweise"],["more","Mehr"]];
+
+const IC = {
+  car:'<path d="M5 17h14M3 17v-4l2-5h14l2 5v4"/><path d="M4 17v2h3v-2M17 17v2h3v-2"/><circle cx="7.5" cy="13.2" r=".9"/><circle cx="16.5" cy="13.2" r=".9"/>',
+  tire:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/>',
+  wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L3 18v3h3l6.5-6.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.3-.6-.6-2.3z"/>',
+  drop:'<path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11z"/>',
+  ticket:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M15 6v12" stroke-dasharray="2 2"/><path d="M7 10h4M7 14h3"/>',
+  pickerl:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5" stroke-dasharray="2 2"/><path d="m9.6 12 1.7 1.7 3.2-3.4"/>',
+  tools:'<path d="m13 7 4-4 4 4-4 4z"/><path d="M15 9 4.5 19.5a1.5 1.5 0 0 0 2 2L17 11"/>',
+  house:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  flame:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.4 1.4-4 2.4-5 .3 1.5 1 2.4 2 3 0-3 .6-5.5.6-8z"/>',
+  chimney:'<path d="M4 21V11l8-6 8 6v10"/><path d="M15 7.5V3h3v7"/><path d="M9 21v-5h6v5"/>',
+  smoke:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3.5V6M12 18v2.5"/>',
+  snow:'<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="m9.5 4.5 2.5 2 2.5-2M9.5 19.5l2.5-2 2.5 2"/>',
+  heart:'<path d="M12 20s-7-4.4-9-9a4.5 4.5 0 0 1 9-3 4.5 4.5 0 0 1 9 3c-2 4.6-9 9-9 9z"/><path d="M7 12h3l1.5-2.5 2 4L15 12h2"/>',
+  tooth:'<path d="M7.5 3C5 3 3.5 5 3.5 7.5c0 3 1.5 4 2 7 .4 2.5.8 6.5 2.5 6.5s1.6-5 3-5h2c1.4 0 1.3 5 3 5s2.1-4 2.5-6.5c.5-3 2-4 2-7C20.5 5 19 3 16.5 3c-2 0-2.8 1-4.5 1s-2.5-1-4.5-1z"/>',
+  syringe:'<path d="m15 3 6 6M18 6l-9.5 9.5-4 1 1-4L15 3"/><path d="m3 21 2.5-2.5M10 8l2 2M7.5 10.5l2 2"/>',
+  stetho:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',
+  dots:'<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>',
+  shield:'<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  wifi:'<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.3" r=".9"/>',
+  bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  tv:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4"/>',
+  news:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
+  dumbbell:'<path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/>',
+  money:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9.5v5M18 9.5v5"/>',
+  piggy:'<path d="M4.5 11.5A7 6 0 0 1 17.5 9H20v4l-2 1.2V17h-3v-2H9.5v2h-3v-2.7a6 6 0 0 1-2-2.8z"/><path d="M10 7.5h4"/><circle cx="16" cy="11" r=".8"/>',
+  plane:'<path d="M3 13.5 21 5l-5 15-3.5-6.5z"/><path d="m12.5 13.5 3-3"/>',
+  passport:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="3.2"/><path d="M8.8 10h6.4M9 16.5h6"/>',
+  idcard:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6M14.5 10h4M14.5 13.5h4"/>',
+  health:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 9v6M9 12h6"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>',
+  license:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15.5h10M8.5 12l1.2-3h4.6l1.2 3z"/><circle cx="9.5" cy="12.6" r=".3"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  check:'<path d="M5 12.5 10 17 19 7"/>',
+  fuel:'<path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M4 10h10"/><path d="M14 8h2l3 3v7a1.5 1.5 0 0 1-3 0v-3h-2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  chart:'<path d="M4 20V11M10 20V5M16 20v-7M2 20h20"/>',
+  download:'<path d="M12 4v11M7 10l5 5 5-5M4 20h16"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  navbar:'<rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M5 17h14M8.5 19.2h.01M12 19.2h.01M15.5 19.2h.01"/>',
+  navtiles:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  navlist:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+  palette:'<path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2s-.9-1.4-.9-2.4S14 15 15 15h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  hand:'<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a7 7 0 0 1-5.6-2.8L3.5 15a1.5 1.5 0 0 1 2.4-1.8L7 14.5V11"/>'
+};
+const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||IC.dots}</svg>`;
+const chipIco = (n, c) => `<span class="ico" style="--ic:var(${c})">${icon(n)}</span>`;
+const CAT_COL = {auto:"--c-auto", haus:"--c-haus", gesundheit:"--c-ges", sonst:"--c-sonst"};
+const KIND_ICON = {pickerl:"pickerl",reifen:"tire",service:"wrench",oel:"drop",vignette:"ticket",reparatur:"tools",therme:"flame",rauchfang:"chimney",rauchmelder:"smoke",klima:"snow",haus:"house",vorsorge:"heart",zahnarzt:"tooth",impfung:"syringe",arzt:"stetho",sonst:"dots"};
+const CT_ICON = {"KFZ-Haftpflicht":"car","Teilkasko":"car","Vollkasko":"car","Haushalt":"house","Eigenheim":"house","Unfall":"heart","Leben":"heart","Kranken":"stetho","Rechtsschutz":"shield","Reise":"plane","Handy":"phone","Internet":"wifi","Strom":"bolt","Gas":"flame","Fernwärme":"flame","ORF-Beitrag":"tv","Streaming":"tv","Zeitung / Magazin":"news","Fitnessstudio":"dumbbell","Leasing / Kredit":"money","Bausparvertrag":"piggy"};
+const DOC_ICON = {"Reisepass":"passport","Personalausweis":"idcard","Führerschein":"license","E-Card":"health","Zulassungsschein":"news","Bankomatkarte":"card","Kreditkarte":"card"};
+const taskIco = t => chipIco(KIND_ICON[t.kind] || "dots", CAT_COL[catOf(t)]);
+const contractIco = c => chipIco(CT_ICON[c.type] || (c.cat==="abo" ? "news" : "shield"), c.cat==="abo" ? "--c-abo" : "--c-ins");
+const docIco = d => chipIco(DOC_ICON[d.type] || "news", "--c-doc");
+
+/* Designs */
+const SKINS = [
+  ["sanft","Sanft","Weiche Formen, Pastellfarben, viel Luft",["#4F63E3","#F2F4FA","#FF9F7A"]],
+  ["bunt","Bunt","Kräftige Farben, große Symbole, verspielt",["#2D6CDF","#FF8A1F","#16A970"]],
+  ["klar","Klar","Ruhig und modern, Zeitleiste statt Kacheln",["#0E8F6E","#14171A","#E7E9EC"]],
+  ["bisher","Bisher","Das bisherige Aussehen",["#1D5E6A","#ECEFF2","#E7B240"]]
+];
+const SKEY = "familienordner-v1-design";
+const getSkin = () => { try{ return localStorage.getItem(SKEY) || ""; }catch(e){ return ""; } };
+function setSkin(v){ document.documentElement.dataset.skin = v; try{ localStorage.setItem(SKEY, v); }catch(e){} }
+document.documentElement.dataset.skin = getSkin() || "bunt";
+function chooseSkin(){
+  const cur = document.documentElement.dataset.skin;
+  dlgInner.innerHTML = `<div class="dlg-h"><h3>Aussehen & Bedienung</h3><p class="sub" style="margin:4px 0 0">Tippe eine Variante an, sie wird sofort angezeigt.</p></div><div class="qhead" style="padding:4px 20px 0">Aussehen</div>
+    <div class="skins">${SKINS.map(([k,l,d,c]) => `<button class="skin-opt" data-act="pickSkin" data-v="${k}" aria-pressed="${k===cur}"><span class="sw">${c.map(x=>`<i style="background:${x}"></i>`).join("")}</span><span><b>${l}</b><span>${d}</span></span></button>`).join("")}</div>
+    <div class="qhead" style="padding:10px 20px 0">Bedienung</div>
+    <div class="skins">${NAVS.map(([k,l,d,ic]) => `<button class="skin-opt" data-act="pickNav" data-v="${k}" aria-pressed="${k===navMode()}">${chipIco(ic,"--c-ins")}<span><b>${l}</b><span>${d}</span></span></button>`).join("")}</div>
+    <div class="dlg-f"><button class="btn primary" id="sDone">Fertig</button></div>`;
+  dlg.showModal();
+  dlgInner.querySelector("#sDone").onclick = () => { if(!getSkin()) setSkin(document.documentElement.dataset.skin); if(!getNav()) setNav(navMode()); dlg.close(); render(); };
+}
 
 /* ================= Hilfen ================= */
 const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36);
@@ -444,7 +705,7 @@ function gcal(title, date, details){
   if(!date) return "";
   const a = date.replace(/-/g,""), b = addDays(date,1).replace(/-/g,"");
   const u = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${a}/${b}&details=${encodeURIComponent((details||"")+"\n\nAus der Zettelwirtschaft")}`;
-  return `<a class="btn ghost" href="${u}" target="_blank" rel="noopener" title="In Google Kalender eintragen">Kalender</a>`;
+  return `<a class="btn ghost" href="${u}" target="_blank" rel="noopener" title="In Google Kalender eintragen">${icon("cal")}Kalender</a>`;
 }
 function empty(text, act, label){
   return `<div class="empty"><div>${text}</div>${act?`<button class="btn primary" data-act="${act}">${label}</button>`:""}</div>`;
@@ -458,14 +719,14 @@ function taskRow(t){
   const calDate = t.kind==="pickerl" && t.due ? pickerlWindow(t.due).from : t.due;
   return `<div class="row">
     ${badge(t.done ? t.doneDate : t.due, st)}
-    <div class="main"><h3>${esc(t.title || k)}</h3>
+    <div class="main"><h3 class="ttl">${taskIco(t)}<span>${esc(t.title || k)}</span></h3>
       <div class="sub">${t.title && t.title!==k ? esc(k)+" · ":""}${sub}</div>
       <div>${whoTags(t.memberId,t.vehicleId)}<span class="tag">${CATS[catOf(t)]}</span></div>
       ${t.notes?`<div class="sub">${esc(t.notes)}</div>`:""}
       ${filesView(t.files)}
     </div>
     <div class="acts">
-      ${t.done ? "" : `<button class="btn ok" data-act="done" data-id="${t.id}">Erledigt</button>${gcal(t.title||k, calDate, whoText(t.memberId,t.vehicleId))}`}
+      ${t.done ? "" : `<button class="btn ok" data-act="done" data-id="${t.id}">${icon("check")}Erledigt</button>${gcal(t.title||k, calDate, whoText(t.memberId,t.vehicleId))}`}
       <button class="btn ghost" data-act="editTask" data-id="${t.id}">Bearbeiten</button>
     </div></div>`;
 }
@@ -488,7 +749,7 @@ function contractRow(c){
   }
   return `<div class="row">
     ${badge(Number(c.notice)?dl:r, st)}
-    <div class="main"><h3>${esc(c.type)}${c.company?" – "+esc(c.company):""}</h3>
+    <div class="main"><h3 class="ttl">${contractIco(c)}<span>${esc(c.type)}${c.company?" – "+esc(c.company):""}</span></h3>
       <div class="sub">${eur(c.premium)} ${esc(c.freq||"jährlich")}${c.freq&&c.freq!=="jährlich"?` (${eur(yearly(c))}/Jahr)`:""}${c.policy?" · Nr. "+esc(c.policy):""}</div>
       <div class="sub">${fr}</div>
       <div>${whoTags(c.memberId,c.vehicleId)}</div>
@@ -505,7 +766,7 @@ function docRow(d){
   const remind = d.expiry ? addMonths(d.expiry, -docWarn(d)) : "";
   return `<div class="row">
     ${badge(d.expiry, st, "doc")}
-    <div class="main"><h3>${esc(d.type)}${m?" – "+esc(m.name):""}</h3>
+    <div class="main"><h3 class="ttl">${docIco(d)}<span>${esc(d.type)}${m?" – "+esc(m.name):""}</span></h3>
       <div class="sub">${t}${d.number?" · Nr. "+esc(d.number):""}</div>
       ${d.notes?`<div class="sub">${esc(d.notes)}</div>`:""}
       ${filesView(d.files)}
@@ -559,6 +820,31 @@ function seasonVignette(){
 }
 
 /* ================= Ansichten ================= */
+function helloBlock(open, late, soon){
+  const h = new Date().getHours();
+  const greet = h < 11 ? "Guten Morgen!" : h >= 18 ? "Guten Abend!" : "Servus!";
+  const ic = h >= 18 || h < 6 ? "moon" : h < 11 ? "sun" : "hand";
+  const day = new Date().toLocaleDateString("de-AT",{weekday:"long", day:"numeric", month:"long"});
+  const msg = late ? `${late} ${late===1?"Sache ist":"Sachen sind"} überfällig.` : soon ? `${soon} ${soon===1?"Sache steht":"Sachen stehen"} bald an.` : "Alles im grünen Bereich.";
+  return `<div class="hello"><div class="hi">${icon(ic)}${greet}</div><div class="sub">${day} · ${msg}</div></div>`;
+}
+function areaTiles(){
+  const t = fTasks().filter(x => !x.done);
+  const mk = (key, label, ic, col, items, stFn) => {
+    const late = items.filter(x => stFn(x)==="late").length, soon = items.filter(x => stFn(x)==="soon").length;
+    const s = late ? `<span class="s bad">${late} überfällig</span>` : soon ? `<span class="s warn">${soon} bald fällig</span>` : `<span class="s">${items.length ? items.length+" offen" : "alles erledigt"}</span>`;
+    return `<button class="area" data-act="area" data-v="${key}" style="--ic:var(${col})">${chipIco(ic,col)}<span style="min-width:0"><b>${label}</b>${s}</span></button>`;
+  };
+  const cons = fContracts().filter(c => contractStatus(c));
+  const docs = fDocs().filter(d => d.expiry);
+  return `<div class="areas">
+    ${mk("auto","Auto","car","--c-auto", t.filter(x=>catOf(x)==="auto"), taskStatus)}
+    ${mk("haus","Haus & Wohnung","house","--c-haus", t.filter(x=>catOf(x)==="haus"), taskStatus)}
+    ${mk("gesundheit","Gesundheit","heart","--c-ges", t.filter(x=>catOf(x)==="gesundheit"), taskStatus)}
+    ${mk("contracts","Verträge","shield","--c-ins", cons, contractStatus)}
+    ${mk("docs","Ausweise","passport","--c-doc", docs.filter(d=>docStatus(d)), docStatus)}
+  </div>`;
+}
 function vOverview(){
   const open = fTasks().filter(t => !t.done);
   const late = open.filter(t => taskStatus(t)==="late").length;
@@ -566,7 +852,9 @@ function vOverview(){
   const spent = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0)
               + fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
   const fixed = fContracts().reduce((a,c)=>a+yearly(c),0);
-  let h = `<div class="stats">
+  const soonN = open.filter(t => taskStatus(t)==="soon").length + fContracts().filter(c=>contractStatus(c)==="soon").length + fDocs().filter(d=>docStatus(d)==="soon").length;
+  const lateN = late + fContracts().filter(c=>contractStatus(c)==="late").length + fDocs().filter(d=>docStatus(d)==="late").length;
+  let h = helloBlock(open.length, lateN, soonN) + `<div class="stats">
     <div class="stat"><b>${open.length}</b><span>offene Aufgaben${late?` · <span class="late-txt">${late} überfällig</span>`:""}</span></div>
     <div class="stat"><b>${eur(spent)}</b><span>Ausgaben ${y} (Aufgaben & Tanken)</span></div>
     <div class="stat"><b>${eur(fixed/12)}</b><span>Fixkosten pro Monat (Verträge)</span></div>
@@ -575,6 +863,8 @@ function vOverview(){
   if(!S.members.length && !S.vehicles.length){
     return h + `<h2>So fängst du an</h2>` + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Danach kannst du Pickerl, Reifenwechsel, Thermenwartung, Arzttermine, Verträge und Ausweise eintragen.","addMember","Person hinzufügen");
   }
+  h += areaTiles();
+  h += newsNote();
   const lb = lastBackup();
   if(!lb || daysUntil(lb) < -30) h += `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. ${lb?`Der letzte Export war am ${fmtD(lb)}.`:"Du hast noch keinen Export gemacht."} Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>`;
   h += seasonalNotes();
@@ -613,19 +903,19 @@ function shortDue(t, st){
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>';
 function compactTask(t, st){
   const who = shortWho(t.memberId, t.vehicleId);
-  return `<div class="ci ${st}">${whenCell(t.due, t.kind==="pickerl")}
+  return `<div class="ci ${st}" data-tid="${t.id}">${whenCell(t.due, t.kind==="pickerl")}${taskIco(t)}
     <button class="open" data-act="editTask" data-id="${t.id}"><div class="t">${esc(t.title || kindLabel(t))}</div><div class="s">${shortDue(t, st)}${who?" · "+who:""}</div></button>
     <button class="chk" data-act="done" data-id="${t.id}" aria-label="${esc(t.title || kindLabel(t))} erledigt" title="Erledigt">${CHECK}</button></div>`;
 }
 function compactContract(c, st){
   const dl = deadline(c), who = shortWho(c.memberId, c.vehicleId);
   const s = st === "late" ? "abgelaufen" : Number(c.notice) ? `kündigen bis ${fmtD(dl)}` : `${c.autoRenew!==false?"verlängert sich":"läuft ab"} am ${fmtD(effRenewal(c))}`;
-  return `<div class="ci ${st}">${whenCell(Number(c.notice)?dl:(st==="late"?c.renewal:effRenewal(c)))}
+  return `<div class="ci ${st}">${whenCell(Number(c.notice)?dl:(st==="late"?c.renewal:effRenewal(c)))}${contractIco(c)}
     <button class="open" data-act="editContract" data-id="${c.id}"><div class="t">${esc(c.type)}${c.company?" – "+esc(c.company):""}</div><div class="s">${s}${who?" · "+who:""}</div></button><span class="spacer"></span></div>`;
 }
 function compactDoc(d, st){
   const m = member(d.memberId);
-  return `<div class="ci ${st}">${whenCell(d.expiry)}
+  return `<div class="ci ${st}">${whenCell(d.expiry)}${docIco(d)}
     <button class="open" data-act="editDoc" data-id="${d.id}"><div class="t">${esc(d.type)}${m?" – "+esc(m.name):""}</div><div class="s">${st==="late"?"abgelaufen":"läuft ab – rechtzeitig verlängern"}</div></button><span class="spacer"></span></div>`;
 }
 function vTasks(){
@@ -682,7 +972,7 @@ function vVehicles(){
     if(nextPick){ const st = taskStatus(nextPick); pickTxt = `<span class="${st==="late"?"late-txt":st==="soon"?"soon-txt":""}">${MONTHS[new Date(nextPick.due+"T00:00").getMonth()]} ${yearOf(nextPick.due)}</span>`; }
     return `<div class="card">
       <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
-        <div><h3>${esc(v.name)}</h3>${m?`<div class="sub" style="margin-top:2px"><span class="dot" style="background:${m.color}"></span> ${esc(m.name)}</div>`:""}</div>
+        <div><h3 class="ttl">${chipIco("car","--c-auto")}<span>${esc(v.name)}</span></h3>${m?`<div class="sub" style="margin-top:2px"><span class="dot" style="background:${m.color}"></span> ${esc(m.name)}</div>`:""}</div>
         ${v.plate?`<span class="plate">${esc(v.plate)}</span>`:""}
       </div>
       <dl class="kv">
@@ -702,7 +992,7 @@ function vVehicles(){
       ${fuel.length?`<details><summary>Tankbuch (${fuel.length})</summary><div class="hist">${fuel.slice(0,30).map(f=>`<div><span>${fmtD(f.date)} · ${num(f.liters,2)} l${f.km?" · "+num(f.km)+" km":""}</span><span><button class="btn ghost" style="padding:0 4px" data-act="editFuel" data-id="${f.id}">${eur(f.cost)}</button></span></div>`).join("")}</div></details>`:""}
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn primary" data-act="addTask" data-veh="${v.id}">+ Aufgabe</button>
-        <button class="btn" data-act="addFuel" data-veh="${v.id}">Tanken</button>
+        <button class="btn" data-act="addFuel" data-veh="${v.id}">${icon("fuel")}Tanken</button>
         <button class="btn ghost" data-act="editVehicle" data-id="${v.id}">Bearbeiten</button>
       </div></div>`;
   }).join("") + `</div>`;
@@ -834,11 +1124,12 @@ function render(){
       S.members.map(m=>`<button class="chip" data-act="filter" data-id="${m.id}" aria-pressed="${filter===m.id}"><span class="dot" style="background:${m.color}"></span>${esc(m.name)}</button>`).join("")
     : "";
   document.getElementById("tabs").innerHTML = TABS.map(([k,l])=>`<button data-act="tab" data-v="${k}" ${tab===k?'aria-current="page"':""}>${ICONS[k]}<span>${l}</span></button>`).join("");
-  const V = {overview:vOverview,tasks:vTasks,vehicles:vVehicles,contracts:vContracts,docs:vDocs,more:vMore}[tab];
-  document.getElementById("view").innerHTML = V();
+  const V = {overview:vOverview,tasks:vTasks,vehicles:vVehicles,contracts:vContracts,docs:vDocs,more:vMore,home:vHome,feed:vFeed}[tab] || vOverview;
+  const back = navMode() !== "leiste" && tab !== homeTab() ? `<div class="backbar"><button class="btn ghost" data-act="go" data-v="${homeTab()}">${icon("back")}${navMode()==="kacheln"?"Startseite":"Alle Termine"}</button></div>` : "";
+  document.getElementById("view").innerHTML = back + V();
   const fab = document.getElementById("fab");
-  const fl = {overview:"+ Aufgabe",tasks:"+ Aufgabe",vehicles:"+ Fahrzeug",contracts:contractView==="ins"?"+ Versicherung":"+ Vertrag",docs:"+ Dokument",more:moreView==="family"?"+ Person":""}[tab];
-  fab.hidden = !fl; fab.textContent = fl;
+  fab.hidden = false; fab.setAttribute("aria-label","Neu hinzufügen");
+  fab.innerHTML = navMode()==="liste" ? icon("plus") : `${icon("plus")}Neu`;
   const imp = document.getElementById("importJson"); if(imp) imp.onchange = importJson;
   hydrate(document.getElementById("view"));
 }
@@ -965,7 +1256,7 @@ function repHint(kind){
 }
 function formTask(t, preset={}){
   const isNew = !t;
-  const defKind = preset.vehicleId ? "pickerl" : (taskCat==="haus"?"therme":taskCat==="gesundheit"?"vorsorge":taskCat==="sonst"?"sonst":"pickerl");
+  const defKind = preset.kind ? preset.kind : preset.vehicleId ? "pickerl" : (taskCat==="haus"?"therme":taskCat==="gesundheit"?"vorsorge":taskCat==="sonst"?"sonst":"pickerl");
   t = t || {kind:defKind, title:"", due:"", memberId: preset.vehicleId ? "" : presetMember(), vehicleId: preset.vehicleId||"", notes:"", done:false, files:[]};
   const files = [...(t.files||[])];
   const rep = t.rep ?? KINDS[t.kind]?.m ?? 0;
@@ -1173,6 +1464,7 @@ async function openFile(id, name, type){
 
 /* ================= Ereignisse ================= */
 document.addEventListener("click", e => {
+  if(suppressClick){ e.preventDefault(); return; }
   const b = e.target.closest("[data-act]"); if(!b) return;
   const a = b.dataset.act, id = b.dataset.id;
   switch(a){
@@ -1183,7 +1475,7 @@ document.addEventListener("click", e => {
     case "cv": contractView = b.dataset.v; render(); break;
     case "mv": moreView = b.dataset.v; render(); break;
     case "sy": statYear = Number(b.dataset.v); render(); break;
-    case "showMember": filter = id; tab = "overview"; render(); window.scrollTo(0,0); break;
+    case "showMember": filter = id; tab = homeTab(); render(); window.scrollTo(0,0); break;
     case "addMember": formMember(); break;
     case "editMember": formMember(member(id)); break;
     case "addVehicle": formVehicle(); break;
@@ -1202,13 +1494,206 @@ document.addEventListener("click", e => {
     case "exportXlsx": exportXlsx(); break;
     case "exportJson": exportJson(b.dataset.v === "1"); break;
     case "goBackup": tab = "more"; moreView = "backup"; render(); window.scrollTo(0,0); break;
+    case "skin": chooseSkin(); break;
+    case "pickNav": setNav(b.dataset.v); dlgInner.querySelectorAll('[data-act="pickNav"]').forEach(x => x.setAttribute("aria-pressed", x===b)); break;
+    case "menu": openDrawer(); break;
+    case "go": goTo(b.dataset.v); break;
+    case "fcat": feedCat = b.dataset.v; render(); break;
+    case "quick": quickAdd(); break;
+    case "quickPick": quickPick(b.dataset.v); break;
+    case "quickFuel": dlg.close(); formFuel(null, b.dataset.veh); break;
+    case "pickSkin": setSkin(b.dataset.v); dlgInner.querySelectorAll('[data-act="pickSkin"]').forEach(x => x.setAttribute("aria-pressed", x===b)); break;
+    case "area": if(["contracts","docs"].includes(b.dataset.v)){ tab = b.dataset.v; if(tab==="contracts") contractView="ins"; } else { tab = "tasks"; taskCat = b.dataset.v; taskView = "open"; } render(); window.scrollTo(0,0); break;
     case "openFile": openFile(b.dataset.fid, b.dataset.name, b.dataset.type); break;
   }
 });
-document.getElementById("fab").onclick = () => {
-  ({overview:()=>formTask(),tasks:()=>formTask(),vehicles:()=>formVehicle(),contracts:()=>formContract(),docs:()=>formDoc(),more:()=>formMember()})[tab]();
-};
+document.getElementById("fab").onclick = () => quickAdd();
 dlg.addEventListener("click", e => { if(e.target === dlg) dlg.close(); });
+
+
+/* ================= Bedienung ================= */
+const NAVS = [
+  ["leiste","Leiste unten","Bereiche über die Leiste am unteren Rand wechseln","navbar"],
+  ["kacheln","Startseite mit Kacheln","Große Kacheln wie am Handy-Startbildschirm, mit Zurück-Knopf","navtiles"],
+  ["liste","Alles in einer Liste","Alle Termine nach Datum, mit Suche, Wischen zum Erledigen und Menü","navlist"]
+];
+const NKEY = "familienordner-v1-bedienung";
+const getNav = () => { try{ return localStorage.getItem(NKEY) || ""; }catch(e){ return ""; } };
+const navMode = () => document.documentElement.dataset.nav || "liste";
+const homeTab = () => ({leiste:"overview", kacheln:"home", liste:"feed"})[navMode()];
+function setNav(v){ document.documentElement.dataset.nav = v; try{ localStorage.setItem(NKEY, v); }catch(e){} tab = homeTab(); render(); window.scrollTo(0,0); }
+document.documentElement.dataset.nav = getNav() || "liste";
+tab = homeTab();
+let feedQuery = "", feedCat = "all", suppressClick = false;
+
+function newsNote(){
+  return "";
+  return `<div class="notes"><div class="note"><h3>Neu: Drei Arten der Bedienung</h3><p>Wähle, wie du dich durch die App bewegst: mit der Leiste unten, mit großen Kacheln oder mit einer einzigen Liste.</p><button class="btn" data-act="skin">${icon("palette")}Bedienung wählen</button></div></div>`;
+}
+function countStatus(){
+  const open = fTasks().filter(t=>!t.done);
+  const late = open.filter(t=>taskStatus(t)==="late").length + fContracts().filter(c=>contractStatus(c)==="late").length + fDocs().filter(d=>docStatus(d)==="late").length;
+  const soon = open.filter(t=>taskStatus(t)==="soon").length + fContracts().filter(c=>contractStatus(c)==="soon").length + fDocs().filter(d=>docStatus(d)==="soon").length;
+  return {open, late, soon};
+}
+function statusLine(items, stFn, emptyTxt){
+  const late = items.filter(x=>stFn(x)==="late").length, soon = items.filter(x=>stFn(x)==="soon").length;
+  return late ? `<span class="s bad">${late} überfällig</span>` : soon ? `<span class="s warn">${soon} bald fällig</span>` : `<span class="s">${emptyTxt(items.length)}</span>`;
+}
+function vHome(){
+  if(!S.members.length && !S.vehicles.length){
+    return helloBlock(0,0,0) + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Danach kannst du Pickerl, Reifenwechsel, Thermenwartung, Arzttermine, Verträge und Ausweise eintragen.","addMember","Person hinzufügen");
+  }
+  const {open, late, soon} = countStatus();
+  const all = [...open.map(t=>taskStatus(t)), ...fContracts().map(c=>contractStatus(c)), ...fDocs().map(d=>docStatus(d))];
+  const tile = (v, label, ic, col, s) => `<button class="tile" data-act="go" data-v="${v}" style="--ic:var(${col})">${chipIco(ic,col)}<span><b>${label}</b>${s}</span></button>`;
+  const cons = fContracts();
+  const y = new Date().getFullYear();
+  const spent = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0) + fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
+  return helloBlock(open.length, late, soon) + newsNote() + seasonalNotes() + `<div class="launch">
+    ${tile("overview","Als Nächstes","cal","--c-sonst", late?`<span class="s bad">${late} überfällig</span>`:soon?`<span class="s warn">${soon} bald fällig</span>`:`<span class="s">nichts dringend</span>`)}
+    ${tile("tasks","Aufgaben","check","--c-ges", statusLine(open, taskStatus, n => n ? n+" offen" : "alles erledigt"))}
+    ${tile("vehicles","Autos","car","--c-auto", `<span class="s">${fVeh().length} ${fVeh().length===1?"Fahrzeug":"Fahrzeuge"}</span>`)}
+    ${tile("contracts","Verträge","shield","--c-ins", statusLine(cons, contractStatus, n => eur(cons.reduce((a,c)=>a+yearly(c),0)/12)+" / Monat"))}
+    ${tile("docs","Ausweise","passport","--c-doc", statusLine(fDocs(), docStatus, n => n+" gespeichert"))}
+    ${tile("more:family","Familie","user","--c-haus", `<span class="s">${S.members.length} ${S.members.length===1?"Person":"Personen"}</span>`)}
+    ${tile("more:stats","Auswertung","chart","--c-abo", `<span class="s">${eur(spent)} heuer</span>`)}
+    ${tile("more:backup","Export & Import","download","--c-sonst", `<span class="s">${lastBackup()?"zuletzt "+fmtD(lastBackup()):"noch nie"}</span>`)}
+    ${tile("skin","Aussehen & Bedienung","palette","--c-ins", `<span class="s">${(SKINS.find(s=>s[0]===document.documentElement.dataset.skin)||SKINS[0])[1]} · ${(NAVS.find(n=>n[0]===navMode())||NAVS[0])[1]}</span>`)}
+  </div>`;
+}
+function feedItems(){
+  const q = feedQuery.trim().toLowerCase();
+  const items = [];
+  const match = txt => !q || txt.toLowerCase().includes(q);
+  if(["all","auto","haus","gesundheit","sonst"].includes(feedCat)) fTasks().filter(t => !t.done && (feedCat==="all" || catOf(t)===feedCat)).forEach(t => {
+    if(!match([t.title, kindLabel(t), t.notes, whoText(t.memberId,t.vehicleId)].join(" "))) return;
+    const st = taskStatus(t); const d = t.kind==="pickerl" && t.due ? pickerlWindow(t.due).from : t.due;
+    items.push({d, st, html: compactTask(t, st)});
+  });
+  if(["all","contracts"].includes(feedCat)) fContracts().forEach(c => {
+    if(!c.renewal || !match([c.type, c.company, c.policy, c.notes, whoText(c.memberId,c.vehicleId)].join(" "))) return;
+    const st = contractStatus(c); items.push({d: deadline(c) || c.renewal, st, html: compactContract(c, st)});
+  });
+  if(["all","docs"].includes(feedCat)) fDocs().forEach(dd => {
+    if(!dd.expiry || !match([dd.type, member(dd.memberId)?.name, dd.notes].join(" "))) return;
+    const st = docStatus(dd); items.push({d: addMonths(dd.expiry, -docWarn(dd)), st, html: compactDoc(dd, st)});
+  });
+  return items;
+}
+function feedListHtml(){
+  const items = feedItems();
+  if(!items.length) return feedQuery ? empty(`Nichts gefunden für „${esc(feedQuery)}“.`) : empty("Hier ist nichts eingetragen.","quick","Etwas hinzufügen");
+  const groups = [["Überfällig",[],"bad"],["Bald fällig",[]],["Nächste 3 Monate",[]],["Später",[]],["Ohne Datum",[]]];
+  items.sort((a,b)=>(a.d||"9999").localeCompare(b.d||"9999")).forEach(i => {
+    if(i.st === "late") groups[0][1].push(i);
+    else if(!i.d) groups[4][1].push(i);
+    else if(i.st === "soon") groups[1][1].push(i);
+    else if(daysUntil(i.d) <= 92) groups[2][1].push(i);
+    else groups[3][1].push(i);
+  });
+  return groups.filter(g=>g[1].length).map(([l,arr,cls]) => `<div class="fgroup ${cls||""}">${l} · ${arr.length}</div><div class="clist">${arr.map(i=>i.html).join("")}</div>`).join("");
+}
+function vFeed(){
+  if(!S.members.length && !S.vehicles.length){
+    return helloBlock(0,0,0) + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Über das Menü links oben findest du alle Bereiche.","addMember","Person hinzufügen");
+  }
+  const {open, late, soon} = countStatus();
+  const cats = [["all","Alle"],["auto","Auto"],["haus","Haus"],["gesundheit","Gesundheit"],["contracts","Verträge"],["docs","Ausweise"]];
+  const lb = lastBackup();
+  const backup = (!lb || daysUntil(lb) < -30) ? `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>` : "";
+  return helloBlock(open.length, late, soon) + newsNote() + backup + seasonalNotes() +
+    `<div class="searchbox" style="margin-top:16px">${icon("search")}<input id="feedSearch" type="search" placeholder="Suchen: Pickerl, Uniqa, Lena …" value="${esc(feedQuery)}" aria-label="Suchen"></div>
+     <div class="chips" style="margin:0 0 4px">${cats.map(([k,l])=>`<button class="chip" data-act="fcat" data-v="${k}" aria-pressed="${feedCat===k}">${l}</button>`).join("")}</div>
+     <p class="swipehint">${icon("check")}Aufgabe nach rechts wischen oder Häkchen tippen = erledigt</p>
+     <div id="feedList">${feedListHtml()}</div>`;
+}
+function openDrawer(){
+  const items = [["feed","Alle Termine","cal","--c-sonst"],["tasks","Aufgaben","check","--c-ges"],["vehicles","Autos","car","--c-auto"],["contracts","Verträge","shield","--c-ins"],["docs","Ausweise","passport","--c-doc"],["more:family","Familie","user","--c-haus"],["more:stats","Auswertung","chart","--c-abo"],["more:backup","Export & Import","download","--c-sonst"],["more:install","Als App nutzen","phone","--c-sonst"],["skin","Aussehen & Bedienung","palette","--c-ins"]];
+  const cur = tab === "more" ? "more:"+moreView : tab;
+  document.getElementById("drawerInner").innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:4px 18px 14px"><h3 style="font-size:20px">Zettelwirtschaft</h3></div>` +
+    items.map(([v,l,ic,col]) => `<button class="dnav" data-act="go" data-v="${v}" ${cur===v?'aria-current="page"':""}>${chipIco(ic,col)}${l}</button>`).join("");
+  document.getElementById("drawer").showModal();
+}
+function goTo(v){
+  const dr = document.getElementById("drawer"); if(dr.open) dr.close();
+  if(v === "skin"){ chooseSkin(); return; }
+  if(v.startsWith("more:")){ tab = "more"; moreView = v.slice(5); }
+  else tab = v;
+  render(); window.scrollTo(0,0);
+}
+const QUICK = [
+  ["Auto"],
+  ["task:pickerl","Pickerl","pickerl","--c-auto"],["task:reifen","Reifen&shy;wechsel","tire","--c-auto"],["task:service","Service","wrench","--c-auto"],
+  ["fuel","Tanken","fuel","--c-auto"],["task:vignette","Vignette","ticket","--c-auto"],["task:reparatur","Reparatur","tools","--c-auto"],
+  ["Haus & Gesundheit"],
+  ["task:therme","Therme","flame","--c-haus"],["task:rauchfang","Rauchfang&shy;kehrer","chimney","--c-haus"],["task:haus","Haus sonstiges","house","--c-haus"],
+  ["task:vorsorge","Vorsorge","heart","--c-ges"],["task:zahnarzt","Zahnarzt","tooth","--c-ges"],["task:arzt","Arzttermin","stetho","--c-ges"],
+  ["Verträge & Ausweise"],
+  ["contract:ins","Versicherung","shield","--c-ins"],["contract:abo","Abo / Vertrag","phone","--c-abo"],["doc","Ausweis","passport","--c-doc"],
+  ["Sonstiges"],
+  ["task:sonst","Andere Aufgabe","dots","--c-sonst"],["vehicle","Fahrzeug","car","--c-auto"],["member","Person","user","--c-haus"]
+];
+function quickAdd(){
+  if(dlg.open) dlg.close();
+  dlgInner.innerHTML = `<div class="dlg-h"><h3>Was möchtest du eintragen?</h3></div><div class="qgrid">${QUICK.map(q => q.length===1 ? `<div class="qhead">${q[0]}</div>` : `<button class="qbtn" data-act="quickPick" data-v="${q[0]}">${chipIco(q[2],q[3])}<span>${q[1]}</span></button>`).join("")}</div>
+    <div class="dlg-f"><button class="btn" id="qClose">Abbrechen</button></div>`;
+  dlg.showModal();
+  dlgInner.querySelector("#qClose").onclick = () => dlg.close();
+}
+function quickPick(v){
+  if(v === "fuel"){
+    const vs = fVeh().length ? fVeh() : S.vehicles;
+    if(!vs.length){ dlg.close(); formVehicle(); return; }
+    if(vs.length === 1){ dlg.close(); formFuel(null, vs[0].id); return; }
+    dlgInner.querySelector(".qgrid").innerHTML = `<div class="qhead">Welches Auto?</div>` + vs.map(x => `<button class="qbtn" data-act="quickFuel" data-veh="${x.id}">${chipIco("car","--c-auto")}<span>${esc(x.name)}</span></button>`).join("");
+    return;
+  }
+  dlg.close();
+  if(v.startsWith("task:")) formTask(null, {kind: v.slice(5)});
+  else if(v.startsWith("contract:")){ contractView = v.slice(9); formContract(); }
+  else if(v === "doc") formDoc();
+  else if(v === "vehicle") formVehicle();
+  else if(v === "member") formMember();
+}
+/* Wischen zum Erledigen */
+(() => {
+  const view = document.getElementById("view");
+  let sw = null;
+  view.addEventListener("pointerdown", e => {
+    const r = e.target.closest(".ci[data-tid]");
+    if(!r || e.target.closest(".chk") || e.button > 0) return;
+    sw = {r, x:e.clientX, y:e.clientY, dx:0, active:false, id:e.pointerId};
+  });
+  view.addEventListener("pointermove", e => {
+    if(!sw || e.pointerId !== sw.id) return;
+    const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if(!sw.active){
+      if(Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.3){ sw.active = true; sw.r.classList.add("swiping"); try{ sw.r.setPointerCapture(e.pointerId); }catch(err){} }
+      else if(Math.abs(dy) > 12){ sw = null; return; }
+    }
+    if(sw && sw.active){
+      const d = Math.max(0, Math.min(dx, 150)); sw.dx = d;
+      sw.r.style.transform = `translateX(${d}px)`;
+      sw.r.style.background = `color-mix(in srgb, var(--green) ${Math.round(Math.min(45, d/2.5))}%, var(--paper))`;
+    }
+  });
+  const end = () => {
+    if(sw && sw.active){
+      const r = sw.r, done = sw.dx > 95;
+      r.classList.remove("swiping"); r.style.transform = ""; r.style.background = "";
+      suppressClick = true; setTimeout(() => suppressClick = false, 60);
+      if(done){ const t = byId(S.tasks, r.dataset.tid); if(t) formDone(t); }
+    }
+    sw = null;
+  };
+  view.addEventListener("pointerup", end);
+  view.addEventListener("pointercancel", end);
+  view.addEventListener("input", e => {
+    if(e.target.id === "feedSearch"){ feedQuery = e.target.value; const l = document.getElementById("feedList"); if(l){ l.innerHTML = feedListHtml(); } }
+  });
+})();
+document.getElementById("drawer").addEventListener("click", e => { if(e.target.id === "drawer") e.target.close(); });
 
 loadLocal();
 render();
