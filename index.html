@@ -111,6 +111,22 @@ details summary{cursor:pointer;color:var(--petrol);font-weight:600;font-size:14p
 .hist{margin-top:8px;font-size:13.5px}
 .hist div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:5px 0}
 .hist .sum{font-weight:700}
+/* Kompakte Liste (Übersicht) */
+.clist{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ci{display:flex;align-items:center;gap:10px;padding:9px 12px 9px 0;border-top:1px solid var(--line);border-left:4px solid var(--petrol-soft)}
+.ci:first-child{border-top:0}
+.ci.soon{border-left-color:var(--amber)} .ci.late{border-left-color:var(--red)}
+.ci .when{width:54px;white-space:nowrap;flex:none;text-align:center;line-height:1.15;font-weight:700;font-size:14px;color:var(--petrol)}
+.ci .when small{display:block;font-size:11px;font-weight:600;color:var(--muted)}
+.ci.soon .when{color:var(--amber)} .ci.late .when{color:var(--red)}
+.ci .open{flex:1;min-width:0;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.ci .t{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci .s{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci .chk{width:34px;height:34px;flex:none;border-radius:50%;border:2px solid var(--line);background:none;cursor:pointer;color:var(--green);display:flex;align-items:center;justify-content:center}
+.ci .chk:hover{border-color:var(--green);background:var(--green-soft)}
+.ci .chk svg{width:18px;height:18px}
+.ci .spacer{width:34px;flex:none}
+.more-link{display:block;margin-top:10px;background:none;border:0;padding:4px 0;color:var(--petrol);font-weight:600;cursor:pointer}
 /* Hinweis-Zettel */
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
 .note{background:var(--note);border:1px solid var(--note-line);padding:16px 16px 14px;border-radius:3px;box-shadow:0 2px 0 var(--note-line);transform:rotate(-.5deg)}
@@ -563,17 +579,55 @@ function vOverview(){
   if(!lb || daysUntil(lb) < -30) h += `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. ${lb?`Der letzte Export war am ${fmtD(lb)}.`:"Du hast noch keinen Export gemacht."} Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>`;
   h += seasonalNotes();
   const items = [];
-  open.forEach(t => items.push({d: t.due || "9999", st: taskStatus(t), html: taskRow(t)}));
-  fContracts().forEach(c => { const st = contractStatus(c); if(st) items.push({d: deadline(c)||c.renewal, st, html: contractRow(c)}); });
-  fDocs().forEach(d => { const st = docStatus(d); if(st) items.push({d: d.expiry, st, html: docRow(d)}); });
+  open.forEach(t => { const st = taskStatus(t); items.push({d: t.due || "9999", st, html: compactTask(t, st)}); });
+  fContracts().forEach(c => { const st = contractStatus(c); if(st) items.push({d: deadline(c)||c.renewal, st, html: compactContract(c, st)}); });
+  fDocs().forEach(d => { const st = docStatus(d); if(st) items.push({d: d.expiry, st, html: compactDoc(d, st)}); });
   const rank = {late:0, soon:1, "":2};
   items.sort((a,b) => (rank[a.st]-rank[b.st]) || a.d.localeCompare(b.d));
   h += `<h2>Als Nächstes</h2>`;
-  h += items.length ? `<div class="list">${items.slice(0,10).map(i=>i.html).join("")}</div>` : empty("Nichts fällig. Alles erledigt!","addTask","Aufgabe hinzufügen");
-  if(items.length > 10) h += `<p class="sub">… und ${items.length-10} weitere unter Aufgaben, Verträge und Dokumente.</p>`;
+  h += items.length ? `<div class="clist">${items.slice(0,15).map(i=>i.html).join("")}</div>` : empty("Nichts fällig. Alles erledigt!","addTask","Aufgabe hinzufügen");
+  if(items.length > 15) h += `<button class="more-link" data-act="tab" data-v="tasks">Alle ${items.length} anzeigen</button>`;
   return h;
 }
 
+function whenCell(dateStr, monthOnly){
+  if(!dateStr) return `<div class="when">–</div>`;
+  const d = new Date(dateStr+"T00:00");
+  return monthOnly
+    ? `<div class="when">${MONTHS[d.getMonth()]}<small>${d.getFullYear()}</small></div>`
+    : `<div class="when">${d.getDate()}.${d.getMonth()+1}.<small>${d.getFullYear()}</small></div>`;
+}
+function shortWho(memberId, vehicleId){
+  const v = vehicle(vehicleId), m = member(memberId || v?.memberId);
+  return [v ? esc(v.plate || v.name) : "", m ? esc(m.name) : ""].filter(Boolean).join(" · ");
+}
+function shortDue(t, st){
+  if(t.kind === "pickerl" && t.due){
+    const w = pickerlWindow(t.due);
+    return st === "late" ? "Frist abgelaufen" : st === "soon" ? `bis spätestens ${fmtD(w.to)}` : `möglich ab ${fmtD(w.from)}`;
+  }
+  if(!t.due) return "ohne Termin";
+  const n = daysUntil(t.due);
+  return n < 0 ? `${-n} ${-n===1?"Tag":"Tage"} überfällig` : n === 0 ? "heute" : n === 1 ? "morgen" : `in ${n} Tagen`;
+}
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>';
+function compactTask(t, st){
+  const who = shortWho(t.memberId, t.vehicleId);
+  return `<div class="ci ${st}">${whenCell(t.due, t.kind==="pickerl")}
+    <button class="open" data-act="editTask" data-id="${t.id}"><div class="t">${esc(t.title || kindLabel(t))}</div><div class="s">${shortDue(t, st)}${who?" · "+who:""}</div></button>
+    <button class="chk" data-act="done" data-id="${t.id}" aria-label="${esc(t.title || kindLabel(t))} erledigt" title="Erledigt">${CHECK}</button></div>`;
+}
+function compactContract(c, st){
+  const dl = deadline(c), who = shortWho(c.memberId, c.vehicleId);
+  const s = st === "late" ? "abgelaufen" : Number(c.notice) ? `kündigen bis ${fmtD(dl)}` : `${c.autoRenew!==false?"verlängert sich":"läuft ab"} am ${fmtD(effRenewal(c))}`;
+  return `<div class="ci ${st}">${whenCell(Number(c.notice)?dl:(st==="late"?c.renewal:effRenewal(c)))}
+    <button class="open" data-act="editContract" data-id="${c.id}"><div class="t">${esc(c.type)}${c.company?" – "+esc(c.company):""}</div><div class="s">${s}${who?" · "+who:""}</div></button><span class="spacer"></span></div>`;
+}
+function compactDoc(d, st){
+  const m = member(d.memberId);
+  return `<div class="ci ${st}">${whenCell(d.expiry)}
+    <button class="open" data-act="editDoc" data-id="${d.id}"><div class="t">${esc(d.type)}${m?" – "+esc(m.name):""}</div><div class="s">${st==="late"?"abgelaufen":"läuft ab – rechtzeitig verlängern"}</div></button><span class="spacer"></span></div>`;
+}
 function vTasks(){
   let all = fTasks();
   if(taskCat !== "all") all = all.filter(t => catOf(t) === taskCat);
