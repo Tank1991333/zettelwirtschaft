@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zettelwirtschaft</title>
-<meta name="description" content="Pickerl, Reifen, Service, Versicherungen, Verträge und Ausweise der ganzen Familie an einem Ort – alle Daten bleiben lokal am Gerät.">
+<meta name="description" content="Pickerl, Reifen, Service und Tanken für Autos, Anhänger und mehr – alle Daten bleiben lokal am Gerät.">
 <meta name="theme-color" content="#2D6CDF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -310,6 +310,9 @@ h3.ttl > span:last-child{min-width:0;overflow-wrap:anywhere}
 [data-skin="klar"] nav.tabs button[aria-current="page"]::after{content:"";position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--petrol)}
 [data-skin="klar"] .fab{border-radius:14px}
 
+/* ===== Fahrzeug-Gruppen ===== */
+.vgroup{display:flex;align-items:center;gap:10px;margin:20px 0 10px;font-size:18px}
+.vgroup .sub{font-family:var(--body);font-weight:500}
 /* ===== Bedienung: Varianten ===== */
 .menubtn{display:none;padding:8px}
 .menubtn svg{width:24px;height:24px}
@@ -348,6 +351,8 @@ dialog#drawer{margin:0;height:100%;max-height:100%;width:min(300px,85vw);border-
 .dnav{display:flex;gap:12px;align-items:center;width:100%;padding:10px 18px;background:none;border:0;font-weight:600;font-size:16px;cursor:pointer;text-align:left;color:var(--ink)}
 .dnav[aria-current="page"]{background:var(--petrol-soft);color:var(--petrol)}
 .dnav .ico{width:36px;height:36px}
+.dhead{padding:14px 18px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dcount{min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--petrol-soft);color:var(--petrol);font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
 [data-skin="sanft"] :is(.tile,.qbtn){border:0;border-radius:22px;box-shadow:var(--shadow)}
 [data-skin="sanft"] .tile .ico{border-radius:50%}
 [data-skin="sanft"] .searchbox input{border:0;border-radius:999px;box-shadow:var(--shadow)}
@@ -389,7 +394,9 @@ dialog#drawer{margin:0;height:100%;max-height:100%;width:min(300px,85vw);border-
 
 <script>
 /* ================= Konstanten ================= */
-const CATS = {auto:"Auto", haus:"Haus & Wohnung", gesundheit:"Gesundheit", sonst:"Sonstiges"};
+const CATS = {auto:"Autos", anhaenger:"Anhänger", sonst:"Sonstiges"};
+const VTYPES = [["auto","Autos"],["anhaenger","Anhänger"],["sonst","Sonstiges"]];
+const vType = v => (v && v.type) || "auto";
 const KINDS = {
   pickerl:{l:"Pickerl (§57a)",c:"auto",m:12},
   reifen:{l:"Reifenwechsel",c:"auto",m:6,special:true},
@@ -397,21 +404,8 @@ const KINDS = {
   oel:{l:"Ölwechsel",c:"auto",m:12},
   vignette:{l:"Vignette",c:"auto",m:12,special:true},
   reparatur:{l:"Reparatur",c:"auto",m:0},
-  therme:{l:"Thermenwartung",c:"haus",m:12},
-  rauchfang:{l:"Rauchfangkehrer",c:"haus",m:12},
-  rauchmelder:{l:"Rauchmelder-Batterien",c:"haus",m:12},
-  klima:{l:"Klimaanlage-Service",c:"haus",m:12},
-  haus:{l:"Haus – Sonstiges",c:"haus",m:0},
-  vorsorge:{l:"Vorsorgeuntersuchung",c:"gesundheit",m:12},
-  zahnarzt:{l:"Zahnarzt / Mundhygiene",c:"gesundheit",m:6},
-  impfung:{l:"Impfung / Auffrischung",c:"gesundheit",m:0},
-  arzt:{l:"Arzttermin",c:"gesundheit",m:0},
   sonst:{l:"Sonstiges",c:"sonst",m:0}
 };
-const INS_TYPES = ["KFZ-Haftpflicht","Teilkasko","Vollkasko","Haushalt","Eigenheim","Unfall","Leben","Kranken","Rechtsschutz","Reise","Handy","Sonstige"];
-const ABO_TYPES = ["Handy","Internet","Strom","Gas","Fernwärme","ORF-Beitrag","Streaming","Zeitung / Magazin","Fitnessstudio","Leasing / Kredit","Bausparvertrag","Sonstiges"];
-const DOC_TYPES = {"Reisepass":6,"Personalausweis":3,"Führerschein":3,"E-Card":2,"Zulassungsschein":0,"Bankomatkarte":1,"Kreditkarte":1,"Sonstiges":3};
-const FREQ = {"monatlich":12,"vierteljährlich":4,"halbjährlich":2,"jährlich":1};
 const COLORS = ["#1D5E6A","#B0532E","#6A4C93","#2F7A45","#C08A00","#3A5BA0","#A23B72","#5B6770"];
 const MONTHS = ["Jän","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
 const I = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -419,11 +413,9 @@ const ICONS = {
   overview:I('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
   tasks:I('<path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>'),
   vehicles:I('<path d="M4 16V11l2-5h12l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/>'),
-  contracts:I('<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>'),
-  docs:I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16.5c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6M14 10h4M14 13.5h4"/>'),
   more:I('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>')
 };
-const TABS = [["overview","Übersicht"],["tasks","Aufgaben"],["vehicles","Autos"],["contracts","Verträge"],["docs","Ausweise"],["more","Mehr"]];
+const TABS = [["overview","Übersicht"],["tasks","Aufgaben"],["vehicles","Fahrzeuge"],["more","Mehr"]];
 
 const IC = {
   car:'<path d="M5 17h14M3 17v-4l2-5h14l2 5v4"/><path d="M4 17v2h3v-2M17 17v2h3v-2"/><circle cx="7.5" cy="13.2" r=".9"/><circle cx="16.5" cy="13.2" r=".9"/>',
@@ -470,6 +462,8 @@ const IC = {
   navbar:'<rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M5 17h14M8.5 19.2h.01M12 19.2h.01M15.5 19.2h.01"/>',
   navtiles:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
   navlist:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/>',
+  trailer:'<rect x="2" y="5.5" width="14" height="9" rx="1.2"/><path d="M16 12.5h6M2 14.5h14"/><circle cx="8.5" cy="17" r="2.2"/>',
+  moto:'<circle cx="5.5" cy="16" r="3"/><circle cx="18.5" cy="16" r="3"/><path d="M5.5 16 9 10h5l4.5 6M14 10l-2-4h-2.5M9 10l3 6"/>',
   palette:'<path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2s-.9-1.4-.9-2.4S14 15 15 15h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
@@ -477,13 +471,9 @@ const IC = {
 };
 const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||IC.dots}</svg>`;
 const chipIco = (n, c) => `<span class="ico" style="--ic:var(${c})">${icon(n)}</span>`;
-const CAT_COL = {auto:"--c-auto", haus:"--c-haus", gesundheit:"--c-ges", sonst:"--c-sonst"};
+const CAT_COL = {auto:"--c-auto", anhaenger:"--c-haus", sonst:"--c-sonst"};
 const KIND_ICON = {pickerl:"pickerl",reifen:"tire",service:"wrench",oel:"drop",vignette:"ticket",reparatur:"tools",therme:"flame",rauchfang:"chimney",rauchmelder:"smoke",klima:"snow",haus:"house",vorsorge:"heart",zahnarzt:"tooth",impfung:"syringe",arzt:"stetho",sonst:"dots"};
-const CT_ICON = {"KFZ-Haftpflicht":"car","Teilkasko":"car","Vollkasko":"car","Haushalt":"house","Eigenheim":"house","Unfall":"heart","Leben":"heart","Kranken":"stetho","Rechtsschutz":"shield","Reise":"plane","Handy":"phone","Internet":"wifi","Strom":"bolt","Gas":"flame","Fernwärme":"flame","ORF-Beitrag":"tv","Streaming":"tv","Zeitung / Magazin":"news","Fitnessstudio":"dumbbell","Leasing / Kredit":"money","Bausparvertrag":"piggy"};
-const DOC_ICON = {"Reisepass":"passport","Personalausweis":"idcard","Führerschein":"license","E-Card":"health","Zulassungsschein":"news","Bankomatkarte":"card","Kreditkarte":"card"};
 const taskIco = t => chipIco(KIND_ICON[t.kind] || "dots", CAT_COL[catOf(t)]);
-const contractIco = c => chipIco(CT_ICON[c.type] || (c.cat==="abo" ? "news" : "shield"), c.cat==="abo" ? "--c-abo" : "--c-ins");
-const docIco = d => chipIco(DOC_ICON[d.type] || "news", "--c-doc");
 
 /* Designs */
 const SKINS = [
@@ -524,7 +514,7 @@ const byId = (arr,id) => arr.find(x => x.id === id);
 
 /* ================= Zustand ================= */
 let S = norm(null);
-let tab = "overview", filter = "all", taskView = "open", taskCat = "all", contractView = "ins", moreView = "family";
+let tab = "overview", filter = "all", taskView = "open", taskCat = "all", moreView = "family";
 let statYear = new Date().getFullYear();
 const LKEY = "familienordner-v1";
 
@@ -608,7 +598,7 @@ async function initCaps(){
     if(hasData()){ await ref.delete(); setSync("Daten auf dieses Gerät übernommen – Online-Kopie gelöscht"); }
   }catch(e){}
 }
-const hasData = () => S.members.length||S.vehicles.length||S.tasks.length||S.contracts.length||S.docs.length;
+const hasData = () => S.members.length||S.vehicles.length||S.tasks.length||S.fuel.length;
 
 /* ================= Filter ================= */
 const vehicleMember = vid => vehicle(vid)?.memberId || "";
@@ -617,12 +607,11 @@ function matchMember(memberId, vehicleId){
   return memberId === filter || (!!vehicleId && vehicleMember(vehicleId) === filter);
 }
 const fTasks = () => S.tasks.filter(t => matchMember(t.memberId, t.vehicleId));
-const fContracts = () => S.contracts.filter(c => matchMember(c.memberId, c.vehicleId));
 const fVeh = () => S.vehicles.filter(v => filter==="all" || v.memberId === filter);
-const fDocs = () => S.docs.filter(d => filter==="all" || d.memberId === filter);
 const fFuel = () => S.fuel.filter(f => filter==="all" || vehicleMember(f.vehicleId) === filter);
-const yearly = c => (Number(c.premium)||0) * (FREQ[c.freq]||1);
-const catOf = t => KINDS[t.kind]?.c || "sonst";
+const catOf = t => { const v = vehicle(t.vehicleId); return v ? vType(v) : "sonst"; };
+const VICON = {auto:"car", anhaenger:"trailer", sonst:"moto"};
+const vIco = v => chipIco(VICON[vType(v)], CAT_COL[vType(v)]);
 const kindLabel = t => KINDS[t.kind]?.l || "Aufgabe";
 
 /* ================= Fristen-Logik ================= */
@@ -649,25 +638,6 @@ function nextDue(kind, from, rep){
   }
   if(kind === "vignette") return d.getMonth() === 11 ? `${y+2}-01-31` : `${y+1}-01-31`;
   return rep > 0 ? addMonths(from, rep) : "";
-}
-function effRenewal(c){
-  if(!c.renewal) return "";
-  let r = c.renewal, g = 0;
-  if(c.autoRenew !== false) while(daysUntil(r) < 0 && g++ < 60) r = addMonths(r, 12);
-  return r;
-}
-function deadline(c){ const r = effRenewal(c); return r ? (Number(c.notice) ? addMonths(r, -Number(c.notice)) : r) : ""; }
-function contractStatus(c){
-  if(!c.renewal) return "";
-  if(c.autoRenew === false && daysUntil(c.renewal) < 0) return "late";
-  const n = daysUntil(deadline(c));
-  return n >= 0 && n <= 60 ? "soon" : "";
-}
-function docWarn(d){ return DOC_TYPES[d.type] ?? 3; }
-function docStatus(d){
-  if(!d.expiry) return "";
-  if(daysUntil(d.expiry) < 0) return "late";
-  return daysUntil(addMonths(d.expiry, -docWarn(d))) <= 0 ? "soon" : "";
 }
 
 /* ================= Bausteine ================= */
@@ -734,59 +704,21 @@ function whoText(memberId, vehicleId){
   const v = vehicle(vehicleId), m = member(memberId || v?.memberId);
   return [v ? v.name+(v.plate?" ("+v.plate+")":"") : "", m ? m.name : ""].filter(Boolean).join(" – ");
 }
-function contractRow(c){
-  const st = contractStatus(c), r = effRenewal(c), dl = deadline(c);
-  let fr = "Kein Ablaufdatum";
-  if(c.renewal){
-    if(st === "late") fr = `<span class="late-txt">Abgelaufen am ${fmtD(c.renewal)}</span>`;
-    else if(Number(c.notice)){
-      const txt = `Kündigen bis ${fmtD(dl)} (läuft bis ${fmtD(r)}${c.autoRenew!==false?", verlängert sich sonst":""})`;
-      fr = st === "soon" ? `<span class="soon-txt">${txt}</span>` : txt;
-    } else {
-      const txt = `${c.autoRenew!==false?"Verlängerung":"Ablauf"} am ${fmtD(r)}`;
-      fr = st === "soon" ? `<span class="soon-txt">${txt}</span>` : txt;
-    }
-  }
-  return `<div class="row">
-    ${badge(Number(c.notice)?dl:r, st)}
-    <div class="main"><h3 class="ttl">${contractIco(c)}<span>${esc(c.type)}${c.company?" – "+esc(c.company):""}</span></h3>
-      <div class="sub">${eur(c.premium)} ${esc(c.freq||"jährlich")}${c.freq&&c.freq!=="jährlich"?` (${eur(yearly(c))}/Jahr)`:""}${c.policy?" · Nr. "+esc(c.policy):""}</div>
-      <div class="sub">${fr}</div>
-      <div>${whoTags(c.memberId,c.vehicleId)}</div>
-      ${c.notes?`<div class="sub">${esc(c.notes)}</div>`:""}
-      ${filesView(c.files)}
-    </div>
-    <div class="acts">${dl?gcal(`${Number(c.notice)?"Kündigungsfrist":"Verlängerung"}: ${c.type}${c.company?" "+c.company:""}`, dl, c.policy?"Nr. "+c.policy:""):""}<button class="btn ghost" data-act="editContract" data-id="${c.id}">Bearbeiten</button></div></div>`;
-}
-function docRow(d){
-  const st = docStatus(d), m = member(d.memberId);
-  let t = d.expiry ? `gültig bis ${fmtD(d.expiry)}` : "ohne Ablaufdatum";
-  if(st === "late") t = `<span class="late-txt">abgelaufen seit ${fmtD(d.expiry)}</span>`;
-  else if(st === "soon") t = `<span class="soon-txt">läuft ab am ${fmtD(d.expiry)} – rechtzeitig verlängern</span>`;
-  const remind = d.expiry ? addMonths(d.expiry, -docWarn(d)) : "";
-  return `<div class="row">
-    ${badge(d.expiry, st, "doc")}
-    <div class="main"><h3 class="ttl">${docIco(d)}<span>${esc(d.type)}${m?" – "+esc(m.name):""}</span></h3>
-      <div class="sub">${t}${d.number?" · Nr. "+esc(d.number):""}</div>
-      ${d.notes?`<div class="sub">${esc(d.notes)}</div>`:""}
-      ${filesView(d.files)}
-    </div>
-    <div class="acts">${remind?gcal(`${d.type}${m?" "+m.name:""} verlängern`, remind, "Läuft ab am "+fmtD(d.expiry)):""}<button class="btn ghost" data-act="editDoc" data-id="${d.id}">Bearbeiten</button></div></div>`;
-}
 
 /* ================= Hinweis-Zettel (Saison) ================= */
 function seasonalNotes(){
-  const vs = fVeh(); if(!vs.length) return "";
+  const vs = fVeh().filter(v => vType(v) !== "anhaenger"); if(!vs.length) return "";
+  const cars = vs.filter(v => vType(v) === "auto");
   const today = todayStr(), y = new Date().getFullYear(), md = today.slice(5);
   const out = [];
   const hasOpen = (v, kind, until) => S.tasks.some(t => t.vehicleId===v.id && t.kind===kind && !t.done && t.due && t.due <= until);
   const doneSince = (v, kind, since) => S.tasks.some(t => t.vehicleId===v.id && t.kind===kind && t.done && t.doneDate >= since);
   if(md >= "10-01" && md <= "11-15"){
-    const miss = vs.filter(v => !hasOpen(v,"reifen",`${y}-12-01`) && !doneSince(v,"reifen",`${y}-09-01`));
+    const miss = cars.filter(v => !hasOpen(v,"reifen",`${y}-12-01`) && !doneSince(v,"reifen",`${y}-09-01`));
     if(miss.length) out.push({t:"Winterreifen", p:`Von 1. November bis 15. April gilt in Österreich die situative Winterreifenpflicht. Für ${miss.map(v=>esc(v.name)).join(", ")} ist noch kein Reifenwechsel eingetragen.`, act:"seasonTires", data:"winter"});
   }
   if(md >= "03-15" && md <= "04-30"){
-    const miss = vs.filter(v => !hasOpen(v,"reifen",`${y}-06-01`) && !doneSince(v,"reifen",`${y}-03-01`));
+    const miss = cars.filter(v => !hasOpen(v,"reifen",`${y}-06-01`) && !doneSince(v,"reifen",`${y}-03-01`));
     if(miss.length) out.push({t:"Sommerreifen", p:`Die Winterreifenpflicht endet am 15. April. Für ${miss.map(v=>esc(v.name)).join(", ")} ist noch kein Wechsel eingetragen.`, act:"seasonTires", data:"summer"});
   }
   if(md >= "11-15" || md <= "01-31"){
@@ -802,7 +734,7 @@ function seasonTires(kind){
   const target = kind === "winter" ? `${y}-10-31` : `${y}-04-20`;
   const due = today <= addDays(target,-7) ? target : addDays(today,7);
   const md = today.slice(5);
-  fVeh().forEach(v => {
+  fVeh().filter(v => vType(v) === "auto").forEach(v => {
     const exists = S.tasks.some(t => t.vehicleId===v.id && t.kind==="reifen" && (!t.done || t.doneDate >= (kind==="winter"?`${y}-09-01`:`${y}-03-01`)));
     if(!exists) S.tasks.push({id:uid(), kind:"reifen", title: kind==="winter"?"Winterreifen drauf":"Sommerreifen drauf", due, vehicleId:v.id, memberId:"", notes:"", done:false, files:[]});
   });
@@ -812,7 +744,7 @@ function seasonVignette(){
   const y = new Date().getFullYear(), md = todayStr().slice(5);
   const due = md >= "11-15" ? `${y+1}-01-31` : `${y}-01-31`;
   const since = md >= "11-15" ? `${y}-11-01` : `${y-1}-11-01`;
-  fVeh().forEach(v => {
+  fVeh().filter(v => vType(v) !== "anhaenger").forEach(v => {
     if(!S.tasks.some(t => t.vehicleId===v.id && t.kind==="vignette" && (!t.done || t.doneDate >= since)))
       S.tasks.push({id:uid(), kind:"vignette", title:"Vignette kaufen", due, vehicleId:v.id, memberId:"", notes:"", done:false, files:[]});
   });
@@ -830,52 +762,41 @@ function helloBlock(open, late, soon){
 }
 function areaTiles(){
   const t = fTasks().filter(x => !x.done);
-  const mk = (key, label, ic, col, items, stFn) => {
-    const late = items.filter(x => stFn(x)==="late").length, soon = items.filter(x => stFn(x)==="soon").length;
+  const mk = (key, label, ic, col) => {
+    const items = t.filter(x => catOf(x) === key);
+    const late = items.filter(x => taskStatus(x)==="late").length, soon = items.filter(x => taskStatus(x)==="soon").length;
     const s = late ? `<span class="s bad">${late} überfällig</span>` : soon ? `<span class="s warn">${soon} bald fällig</span>` : `<span class="s">${items.length ? items.length+" offen" : "alles erledigt"}</span>`;
-    return `<button class="area" data-act="area" data-v="${key}" style="--ic:var(${col})">${chipIco(ic,col)}<span style="min-width:0"><b>${label}</b>${s}</span></button>`;
+    return `<button class="area" data-act="go" data-v="cat:${key}" style="--ic:var(${col})">${chipIco(ic,col)}<span style="min-width:0"><b>${label}</b>${s}</span></button>`;
   };
-  const cons = fContracts().filter(c => contractStatus(c));
-  const docs = fDocs().filter(d => d.expiry);
-  return `<div class="areas">
-    ${mk("auto","Auto","car","--c-auto", t.filter(x=>catOf(x)==="auto"), taskStatus)}
-    ${mk("haus","Haus & Wohnung","house","--c-haus", t.filter(x=>catOf(x)==="haus"), taskStatus)}
-    ${mk("gesundheit","Gesundheit","heart","--c-ges", t.filter(x=>catOf(x)==="gesundheit"), taskStatus)}
-    ${mk("contracts","Verträge","shield","--c-ins", cons, contractStatus)}
-    ${mk("docs","Ausweise","passport","--c-doc", docs.filter(d=>docStatus(d)), docStatus)}
-  </div>`;
+  return `<div class="areas">${mk("auto","Autos","car","--c-auto")}${mk("anhaenger","Anhänger","trailer","--c-haus")}${mk("sonst","Sonstiges","moto","--c-sonst")}</div>`;
 }
-function vOverview(){
-  const open = fTasks().filter(t => !t.done);
-  const late = open.filter(t => taskStatus(t)==="late").length;
-  const y = new Date().getFullYear();
-  const spent = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0)
-              + fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
-  const fixed = fContracts().reduce((a,c)=>a+yearly(c),0);
-  const soonN = open.filter(t => taskStatus(t)==="soon").length + fContracts().filter(c=>contractStatus(c)==="soon").length + fDocs().filter(d=>docStatus(d)==="soon").length;
-  const lateN = late + fContracts().filter(c=>contractStatus(c)==="late").length + fDocs().filter(d=>docStatus(d)==="late").length;
-  let h = helloBlock(open.length, lateN, soonN) + `<div class="stats">
-    <div class="stat"><b>${open.length}</b><span>offene Aufgaben${late?` · <span class="late-txt">${late} überfällig</span>`:""}</span></div>
-    <div class="stat"><b>${eur(spent)}</b><span>Ausgaben ${y} (Aufgaben & Tanken)</span></div>
-    <div class="stat"><b>${eur(fixed/12)}</b><span>Fixkosten pro Monat (Verträge)</span></div>
-    <div class="stat"><b>${eur(fixed)}</b><span>Fixkosten pro Jahr</span></div>
-  </div>`;
-  if(!S.members.length && !S.vehicles.length){
-    return h + `<h2>So fängst du an</h2>` + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Danach kannst du Pickerl, Reifenwechsel, Thermenwartung, Arzttermine, Verträge und Ausweise eintragen.","addMember","Person hinzufügen");
-  }
-  h += areaTiles();
-  h += newsNote();
+function spendYear(y){
+  const work = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0);
+  const fuel = fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
+  return {work, fuel, total: work + fuel};
+}
+function backupNote(){
   const lb = lastBackup();
-  if(!lb || daysUntil(lb) < -30) h += `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. ${lb?`Der letzte Export war am ${fmtD(lb)}.`:"Du hast noch keinen Export gemacht."} Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>`;
-  h += seasonalNotes();
-  const items = [];
-  open.forEach(t => { const st = taskStatus(t); items.push({d: t.due || "9999", st, html: compactTask(t, st)}); });
-  fContracts().forEach(c => { const st = contractStatus(c); if(st) items.push({d: deadline(c)||c.renewal, st, html: compactContract(c, st)}); });
-  fDocs().forEach(d => { const st = docStatus(d); if(st) items.push({d: d.expiry, st, html: compactDoc(d, st)}); });
+  if(lb && daysUntil(lb) >= -30) return "";
+  return `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. ${lb?`Der letzte Export war am ${fmtD(lb)}.`:"Du hast noch keinen Export gemacht."} Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>`;
+}
+const START_TXT = "Leg zuerst eure Fahrzeuge an: Autos, Anhänger oder Sonstiges wie Motorrad und Wohnwagen. Danach kannst du Pickerl, Reifenwechsel, Service und Tanken eintragen.";
+function vOverview(){
+  const {open, late, soon} = countStatus();
+  const y = new Date().getFullYear(), sp = spendYear(y);
+  let h = helloBlock(open.length, late, soon) + `<div class="stats">
+    <div class="stat"><b>${open.length}</b><span>offene Aufgaben${late?` · <span class="late-txt">${late} überfällig</span>`:""}</span></div>
+    <div class="stat"><b>${eur(sp.total)}</b><span>Ausgaben ${y}</span></div>
+    <div class="stat"><b>${eur(sp.work)}</b><span>Werkstatt ${y}</span></div>
+    <div class="stat"><b>${eur(sp.fuel)}</b><span>Tanken ${y}</span></div>
+  </div>`;
+  if(!S.vehicles.length && !S.tasks.length) return h + `<h2>So fängst du an</h2>` + empty(START_TXT,"quick","Fahrzeug anlegen");
+  h += areaTiles() + backupNote() + seasonalNotes();
+  const items = open.map(t => { const st = taskStatus(t); return {d: t.due || "9999", st, html: compactTask(t, st)}; });
   const rank = {late:0, soon:1, "":2};
   items.sort((a,b) => (rank[a.st]-rank[b.st]) || a.d.localeCompare(b.d));
   h += `<h2>Als Nächstes</h2>`;
-  h += items.length ? `<div class="clist">${items.slice(0,15).map(i=>i.html).join("")}</div>` : empty("Nichts fällig. Alles erledigt!","addTask","Aufgabe hinzufügen");
+  h += items.length ? `<div class="clist">${items.slice(0,15).map(i=>i.html).join("")}</div>` : empty("Nichts fällig. Alles erledigt!","quick","Aufgabe hinzufügen");
   if(items.length > 15) h += `<button class="more-link" data-act="tab" data-v="tasks">Alle ${items.length} anzeigen</button>`;
   return h;
 }
@@ -906,17 +827,6 @@ function compactTask(t, st){
   return `<div class="ci ${st}" data-tid="${t.id}">${whenCell(t.due, t.kind==="pickerl")}${taskIco(t)}
     <button class="open" data-act="editTask" data-id="${t.id}"><div class="t">${esc(t.title || kindLabel(t))}</div><div class="s">${shortDue(t, st)}${who?" · "+who:""}</div></button>
     <button class="chk" data-act="done" data-id="${t.id}" aria-label="${esc(t.title || kindLabel(t))} erledigt" title="Erledigt">${CHECK}</button></div>`;
-}
-function compactContract(c, st){
-  const dl = deadline(c), who = shortWho(c.memberId, c.vehicleId);
-  const s = st === "late" ? "abgelaufen" : Number(c.notice) ? `kündigen bis ${fmtD(dl)}` : `${c.autoRenew!==false?"verlängert sich":"läuft ab"} am ${fmtD(effRenewal(c))}`;
-  return `<div class="ci ${st}">${whenCell(Number(c.notice)?dl:(st==="late"?c.renewal:effRenewal(c)))}${contractIco(c)}
-    <button class="open" data-act="editContract" data-id="${c.id}"><div class="t">${esc(c.type)}${c.company?" – "+esc(c.company):""}</div><div class="s">${s}${who?" · "+who:""}</div></button><span class="spacer"></span></div>`;
-}
-function compactDoc(d, st){
-  const m = member(d.memberId);
-  return `<div class="ci ${st}">${whenCell(d.expiry)}${docIco(d)}
-    <button class="open" data-act="editDoc" data-id="${d.id}"><div class="t">${esc(d.type)}${m?" – "+esc(m.name):""}</div><div class="s">${st==="late"?"abgelaufen":"läuft ab – rechtzeitig verlängern"}</div></button><span class="spacer"></span></div>`;
 }
 function vTasks(){
   let all = fTasks();
@@ -957,14 +867,13 @@ function vVehicles(){
   const vs = fVeh(), y = new Date().getFullYear();
   let h = `<div class="bar"><h2>Fahrzeuge</h2><button class="btn" data-act="addVehicle">+ Fahrzeug</button></div>`;
   if(!vs.length) return h + empty("Noch keine Fahrzeuge eingetragen.","addVehicle","Fahrzeug hinzufügen");
-  h += `<div class="grid">` + vs.map(v => {
+  const card = v => {
     const ts = S.tasks.filter(t => t.vehicleId === v.id);
     const done = ts.filter(t=>t.done).sort((a,b)=>(b.doneDate||"").localeCompare(a.doneDate||""));
     const fuel = S.fuel.filter(f => f.vehicleId === v.id).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
     const maintY = done.filter(t=>yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0);
     const fuelY = fuel.filter(f=>yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
     const total = done.reduce((a,t)=>a+(Number(t.cost)||0),0);
-    const insY = S.contracts.filter(c => c.vehicleId === v.id).reduce((a,c)=>a+yearly(c),0);
     const nextPick = ts.filter(t=>!t.done && t.kind==="pickerl").sort((a,b)=>(a.due||"9").localeCompare(b.due||"9"))[0];
     const fs = fuelStats(v.id);
     const m = member(v.memberId);
@@ -972,7 +881,7 @@ function vVehicles(){
     if(nextPick){ const st = taskStatus(nextPick); pickTxt = `<span class="${st==="late"?"late-txt":st==="soon"?"soon-txt":""}">${MONTHS[new Date(nextPick.due+"T00:00").getMonth()]} ${yearOf(nextPick.due)}</span>`; }
     return `<div class="card">
       <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
-        <div><h3 class="ttl">${chipIco("car","--c-auto")}<span>${esc(v.name)}</span></h3>${m?`<div class="sub" style="margin-top:2px"><span class="dot" style="background:${m.color}"></span> ${esc(m.name)}</div>`:""}</div>
+        <div><h3 class="ttl">${vIco(v)}<span>${esc(v.name)}</span></h3>${m?`<div class="sub" style="margin-top:2px"><span class="dot" style="background:${m.color}"></span> ${esc(m.name)}</div>`:""}</div>
         ${v.plate?`<span class="plate">${esc(v.plate)}</span>`:""}
       </div>
       <dl class="kv">
@@ -982,7 +891,6 @@ function vVehicles(){
         <dt>Offene Aufgaben</dt><dd>${ts.filter(t=>!t.done).length}</dd>
         <dt>Werkstatt ${y}</dt><dd>${eur(maintY)}</dd>
         <dt>Tanken ${y}</dt><dd>${eur(fuelY)}</dd>
-        <dt>Versicherung/Jahr</dt><dd>${eur(insY)}</dd>
         ${fs.cons?`<dt>Ø Verbrauch</dt><dd>${num(fs.cons,1)} l/100 km</dd>`:""}
         ${fs.last?`<dt>Letzte Füllung</dt><dd>${num(fs.last,1)} l/100 km</dd>`:""}
         ${fs.costKm?`<dt>Spritkosten</dt><dd>${num(fs.costKm*100,2)} € / 100 km</dd>`:""}
@@ -992,36 +900,15 @@ function vVehicles(){
       ${fuel.length?`<details><summary>Tankbuch (${fuel.length})</summary><div class="hist">${fuel.slice(0,30).map(f=>`<div><span>${fmtD(f.date)} · ${num(f.liters,2)} l${f.km?" · "+num(f.km)+" km":""}</span><span><button class="btn ghost" style="padding:0 4px" data-act="editFuel" data-id="${f.id}">${eur(f.cost)}</button></span></div>`).join("")}</div></details>`:""}
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn primary" data-act="addTask" data-veh="${v.id}">+ Aufgabe</button>
-        <button class="btn" data-act="addFuel" data-veh="${v.id}">${icon("fuel")}Tanken</button>
+        ${vType(v)!=="anhaenger"?`<button class="btn" data-act="addFuel" data-veh="${v.id}">${icon("fuel")}Tanken</button>`:""}
         <button class="btn ghost" data-act="editVehicle" data-id="${v.id}">Bearbeiten</button>
       </div></div>`;
-  }).join("") + `</div>`;
+  };
+  VTYPES.forEach(([k,l]) => { const g = vs.filter(v => vType(v) === k); if(g.length) h += `<h3 class="vgroup">${chipIco(VICON[k], CAT_COL[k])}${l} <span class="sub">${g.length}</span></h3><div class="grid">${g.map(card).join("")}</div>`; });
   return h;
 }
 
-function vContracts(){
-  const list = fContracts().filter(c => (c.cat||"ins") === contractView).sort((a,b)=>a.type.localeCompare(b.type));
-  const tot = list.reduce((a,c)=>a+yearly(c),0);
-  let h = `<div class="bar"><h2>Verträge</h2>
-    <div class="seg"><button data-act="cv" data-v="ins" aria-pressed="${contractView==="ins"}">Versicherungen</button><button data-act="cv" data-v="abo" aria-pressed="${contractView==="abo"}">Abos & Verträge</button></div></div>`;
-  if(!list.length) return h + empty(contractView==="ins"?"Noch keine Versicherungen eingetragen.":"Noch keine Abos oder Verträge eingetragen (Handy, Strom, Internet, Streaming …).","addContract", contractView==="ins"?"Versicherung hinzufügen":"Vertrag hinzufügen");
-  const groups = {};
-  list.forEach(c => { const k = c.memberId || vehicleMember(c.vehicleId) || ""; (groups[k] = groups[k]||[]).push(c); });
-  h += `<p class="sub" style="margin:0 0 10px">Gesamt: <b>${eur(tot)}</b> pro Jahr · <b>${eur(tot/12)}</b> pro Monat</p>`;
-  Object.entries(groups).forEach(([mid,arr]) => {
-    const m = member(mid), s = arr.reduce((a,c)=>a+yearly(c),0);
-    h += `<h3 style="margin:18px 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">${m?`<span class="dot" style="background:${m.color}"></span>${esc(m.name)}`:"Ganze Familie"} <span class="sub" style="font-family:var(--body);font-weight:500">${eur(s)}/Jahr</span></h3>
-      <div class="list">${arr.map(contractRow).join("")}</div>`;
-  });
-  return h;
-}
 
-function vDocs(){
-  const list = fDocs().slice().sort((a,b)=>(a.expiry||"9999").localeCompare(b.expiry||"9999"));
-  let h = `<div class="bar"><h2>Dokumente & Ausweise</h2><button class="btn" data-act="addDoc">+ Dokument</button></div>
-    <p class="sub" style="margin:-4px 0 12px">Die App erinnert rechtzeitig vor dem Ablauf, beim Reisepass 6 Monate vorher, weil viele Länder diese Restgültigkeit verlangen.</p>`;
-  return h + (list.length ? `<div class="list">${list.map(docRow).join("")}</div>` : empty("Noch keine Dokumente eingetragen. Reisepass, Personalausweis, Führerschein, E-Card …","addDoc","Dokument hinzufügen"));
-}
 
 function vMore(){
   let h = `<div class="bar" style="margin-top:4px"><div class="seg">
@@ -1031,20 +918,19 @@ function vMore(){
 }
 function vFamily(){
   let h = `<div class="bar"><h2>Familie</h2><button class="btn" data-act="addMember">+ Person</button></div>`;
-  if(!S.members.length) return h + empty("Noch niemand eingetragen. Leg alle Familienmitglieder an, damit du alles zuordnen kannst.","addMember","Person hinzufügen");
+  if(!S.members.length) return h + empty("Noch niemand eingetragen. Leg die Familienmitglieder an, damit du Fahrzeuge und Aufgaben zuordnen kannst.","addMember","Person hinzufügen");
   const y = new Date().getFullYear();
   return h + `<div class="grid">` + S.members.map(m => {
     const vs = S.vehicles.filter(v=>v.memberId===m.id);
     const ts = S.tasks.filter(t => t.memberId===m.id || (t.vehicleId && vehicleMember(t.vehicleId)===m.id));
-    const cs = S.contracts.filter(c => c.memberId===m.id || (c.vehicleId && vehicleMember(c.vehicleId)===m.id));
-    const docs = S.docs.filter(d => d.memberId===m.id);
+    const spent = ts.filter(t=>t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0)
+      + S.fuel.filter(f=>vehicleMember(f.vehicleId)===m.id && yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
     return `<div class="card">
       <h3 style="display:flex;align-items:center;gap:10px"><span class="dot" style="background:${m.color};width:14px;height:14px"></span>${esc(m.name)}</h3>
       <dl class="kv">
         <dt>Fahrzeuge</dt><dd>${vs.length?vs.map(v=>esc(v.name)).join(", "):"–"}</dd>
         <dt>Offene Aufgaben</dt><dd>${ts.filter(t=>!t.done).length}</dd>
-        <dt>Verträge</dt><dd>${cs.length} · ${eur(cs.reduce((a,c)=>a+yearly(c),0))}/Jahr</dd>
-        <dt>Dokumente</dt><dd>${docs.length}</dd>
+        <dt>Ausgaben ${y}</dt><dd>${eur(spent)}</dd>
       </dl>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn" data-act="showMember" data-id="${m.id}">Nur ${esc(m.name)} anzeigen</button>
@@ -1058,36 +944,33 @@ function bars(entries){
 }
 function vStats(){
   const Y = statYear;
-  const tDone = fTasks().filter(t=>t.done), fuel = fFuel(), cons = fContracts();
+  const tDone = fTasks().filter(t=>t.done), fuel = fFuel();
   const years = [...new Set([new Date().getFullYear(), ...tDone.map(t=>yearOf(t.doneDate)), ...fuel.map(f=>yearOf(f.date))].filter(Boolean))].sort((a,b)=>b-a);
   const inY = s => yearOf(s) === Y;
+  const cost = x => Number(x.cost)||0;
   const months = Array(12).fill(0);
-  tDone.filter(t=>inY(t.doneDate)).forEach(t => months[Number(t.doneDate.slice(5,7))-1] += Number(t.cost)||0);
-  fuel.filter(f=>inY(f.date)).forEach(f => months[Number(f.date.slice(5,7))-1] += Number(f.cost)||0);
+  tDone.filter(t=>inY(t.doneDate)).forEach(t => months[Number(t.doneDate.slice(5,7))-1] += cost(t));
+  fuel.filter(f=>inY(f.date)).forEach(f => months[Number(f.date.slice(5,7))-1] += cost(f));
   const mMax = Math.max(1,...months);
-  const catSum = c => tDone.filter(t=>inY(t.doneDate) && catOf(t)===c).reduce((a,t)=>a+(Number(t.cost)||0),0);
-  const fuelY = fuel.filter(f=>inY(f.date)).reduce((a,f)=>a+(Number(f.cost)||0),0);
-  const insY = cons.filter(c=>c.cat!=="abo").reduce((a,c)=>a+yearly(c),0);
-  const aboY = cons.filter(c=>c.cat==="abo").reduce((a,c)=>a+yearly(c),0);
-  const byCat = [["Auto – Werkstatt",catSum("auto")],["Auto – Tanken",fuelY],["Haus & Wohnung",catSum("haus")],["Gesundheit",catSum("gesundheit")],["Sonstiges",catSum("sonst")],["Versicherungen*",insY],["Abos & Verträge*",aboY]];
+  const workT = k => tDone.filter(t=>inY(t.doneDate) && catOf(t)===k).reduce((a,t)=>a+cost(t),0);
+  const fuelT = k => fuel.filter(f=>inY(f.date) && vType(vehicle(f.vehicleId))===k).reduce((a,f)=>a+cost(f),0);
+  const byCat = [["Autos – Werkstatt",workT("auto"),"var(--c-auto)"],["Autos – Tanken",fuelT("auto"),"var(--c-auto)"],["Anhänger",workT("anhaenger")+fuelT("anhaenger"),"var(--c-haus)"],["Sonstiges",workT("sonst")+fuelT("sonst"),"var(--c-sonst)"]];
   const total = byCat.reduce((a,e)=>a+e[1],0);
   const byVeh = fVeh().map(v => [esc(v.name),
-    tDone.filter(t=>t.vehicleId===v.id && inY(t.doneDate)).reduce((a,t)=>a+(Number(t.cost)||0),0)
-    + fuel.filter(f=>f.vehicleId===v.id && inY(f.date)).reduce((a,f)=>a+(Number(f.cost)||0),0)
-    + S.contracts.filter(c=>c.vehicleId===v.id).reduce((a,c)=>a+yearly(c),0)]).sort((a,b)=>b[1]-a[1]);
+    tDone.filter(t=>t.vehicleId===v.id && inY(t.doneDate)).reduce((a,t)=>a+cost(t),0) + fuel.filter(f=>f.vehicleId===v.id && inY(f.date)).reduce((a,f)=>a+cost(f),0),
+    `var(${CAT_COL[vType(v)]})`]).sort((a,b)=>b[1]-a[1]);
   const byMem = S.members.filter(m=>filter==="all"||m.id===filter).map(m => [`<span class="dot" style="background:${m.color}"></span> ${esc(m.name)}`,
-    tDone.filter(t=>inY(t.doneDate) && (t.memberId===m.id || (t.vehicleId && vehicleMember(t.vehicleId)===m.id))).reduce((a,t)=>a+(Number(t.cost)||0),0)
-    + fuel.filter(f=>inY(f.date) && vehicleMember(f.vehicleId)===m.id).reduce((a,f)=>a+(Number(f.cost)||0),0)
-    + S.contracts.filter(c=>c.memberId===m.id || (c.vehicleId && vehicleMember(c.vehicleId)===m.id)).reduce((a,c)=>a+yearly(c),0), m.color]).sort((a,b)=>b[1]-a[1]);
-  const yearTotals = years.slice(0,6).reverse().map(y => [y, tDone.filter(t=>yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0) + fuel.filter(f=>yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0)]);
+    tDone.filter(t=>inY(t.doneDate) && (t.memberId===m.id || (t.vehicleId && vehicleMember(t.vehicleId)===m.id))).reduce((a,t)=>a+cost(t),0)
+    + fuel.filter(f=>inY(f.date) && vehicleMember(f.vehicleId)===m.id).reduce((a,f)=>a+cost(f),0), m.color]).sort((a,b)=>b[1]-a[1]);
+  const yearTotals = years.slice(0,6).reverse().map(y => [y, tDone.filter(t=>yearOf(t.doneDate)===y).reduce((a,t)=>a+cost(t),0) + fuel.filter(f=>yearOf(f.date)===y).reduce((a,f)=>a+cost(f),0)]);
   const yMax = Math.max(1,...yearTotals.map(e=>e[1]));
   return `<div class="bar"><h2>Auswertung</h2><div class="seg">${years.map(y=>`<button data-act="sy" data-v="${y}" aria-pressed="${y===Y}">${y}</button>`).join("")}</div></div>
     <div class="stats" style="margin-bottom:12px"><div class="stat"><b>${eur(total)}</b><span>Gesamtkosten ${Y}</span></div><div class="stat"><b>${eur(total/12)}</b><span>pro Monat im Schnitt</span></div></div>
-    <div class="panel"><h3>Ausgaben pro Monat ${Y}</h3><div class="cols">${months.map((v,i)=>`<div class="c" title="${MONTHS[i]}: ${eur(v)}"><i style="height:${(v/mMax*100).toFixed(1)}%"></i><span>${MONTHS[i]}</span></div>`).join("")}</div><p class="sub" style="margin:8px 0 0">Erledigte Aufgaben und Tanken, ohne Verträge.</p></div>
-    <div class="panel"><h3>Nach Bereich</h3>${bars(byCat)}<p class="sub" style="margin:8px 0 0">* Verträge nach aktuellen Prämien hochgerechnet aufs Jahr.</p></div>
-    ${byVeh.length?`<div class="panel"><h3>Pro Fahrzeug (inkl. Versicherung)</h3>${bars(byVeh)}</div>`:""}
+    <div class="panel"><h3>Ausgaben pro Monat ${Y}</h3><div class="cols">${months.map((v,i)=>`<div class="c" title="${MONTHS[i]}: ${eur(v)}"><i style="height:${(v/mMax*100).toFixed(1)}%"></i><span>${MONTHS[i]}</span></div>`).join("")}</div><p class="sub" style="margin:8px 0 0">Erledigte Aufgaben und Tanken.</p></div>
+    <div class="panel"><h3>Nach Bereich</h3>${bars(byCat)}</div>
+    ${byVeh.length?`<div class="panel"><h3>Pro Fahrzeug</h3>${bars(byVeh)}</div>`:""}
     ${byMem.length?`<div class="panel"><h3>Pro Person</h3>${bars(byMem)}</div>`:""}
-    ${yearTotals.length>1?`<div class="panel"><h3>Jahresvergleich (Aufgaben & Tanken)</h3><div class="cols">${yearTotals.map(([y,v])=>`<div class="c" title="${y}: ${eur(v)}"><i style="height:${(v/yMax*100).toFixed(1)}%"></i><span>${y}</span></div>`).join("")}</div></div>`:""}`;
+    ${yearTotals.length>1?`<div class="panel"><h3>Jahresvergleich</h3><div class="cols">${yearTotals.map(([y,v])=>`<div class="c" title="${y}: ${eur(v)}"><i style="height:${(v/yMax*100).toFixed(1)}%"></i><span>${y}</span></div>`).join("")}</div></div>`:""}`;
 }
 function vBackup(){
   const ok = true, lb = lastBackup();
@@ -1101,7 +984,7 @@ function vBackup(){
         <button class="btn" data-act="exportJson" data-v="0" ${ok?"":"disabled"}>Ohne Fotos (kleiner)</button></div></div>
       <div class="card"><h3>Importieren</h3><p class="sub" style="margin:0">Lädt eine exportierte Datei. Du kannst sie zu den vorhandenen Daten dazufügen oder alles damit ersetzen.</p>
         <label class="btn" style="align-self:flex-start">Datei importieren<input type="file" id="importJson" accept="application/json,.json" hidden></label></div>
-      <div class="card"><h3>Excel-Export</h3><p class="sub" style="margin:0">Alle Aufgaben, Kosten, Verträge, Ausweise, Fahrzeuge und das Tankbuch als Excel-Tabelle zum Nachschauen oder für die Arbeitnehmerveranlagung. Kann nicht wieder importiert werden.</p>
+      <div class="card"><h3>Excel-Export</h3><p class="sub" style="margin:0">Alle Aufgaben mit Kosten, die Fahrzeuge und das Tankbuch als Excel-Tabelle zum Nachschauen oder für die Arbeitnehmerveranlagung. Kann nicht wieder importiert werden.</p>
         <button class="btn" data-act="exportXlsx" ${ok?"":"disabled"} style="align-self:flex-start">Excel herunterladen</button></div>
     </div>
     ${ok?"":`<p class="sub">Herunterladen ist nur in der veröffentlichten App möglich.</p>`}
@@ -1113,7 +996,7 @@ function vInstall(){
     <p><b>Android (Chrome):</b> Seite öffnen, oben rechts auf die drei Punkte tippen, dann „App installieren“ bzw. „Zum Startbildschirm hinzufügen“.</p>
     <p>Danach startet die Zettelwirtschaft mit eigenem Symbol wie eine richtige App und funktioniert auch ohne Internet.</p>
     <p><b>Wichtig:</b> Die Daten bleiben in genau dem Browser, in dem du sie eingibst. Am iPhone hat die App am Home-Bildschirm einen eigenen Speicher, getrennt von Safari. Nutze die Zettelwirtschaft daher immer auf dem gleichen Weg und übertrage Daten auf andere Geräte mit Export und Import.</p>
-    <p><b>Erinnerungen:</b> Bei jeder offenen Aufgabe, jedem Vertrag und jedem Ausweis gibt es den Knopf „Kalender“. Damit trägst du den Termin in den Google Kalender ein und bekommst eine Benachrichtigung am Handy.</p></div>`;
+    <p><b>Erinnerungen:</b> Bei jeder offenen Aufgabe gibt es den Knopf „Kalender“. Damit trägst du den Termin in den Google Kalender ein und bekommst eine Benachrichtigung am Handy.</p></div>`;
 }
 
 /* ================= Render ================= */
@@ -1124,7 +1007,7 @@ function render(){
       S.members.map(m=>`<button class="chip" data-act="filter" data-id="${m.id}" aria-pressed="${filter===m.id}"><span class="dot" style="background:${m.color}"></span>${esc(m.name)}</button>`).join("")
     : "";
   document.getElementById("tabs").innerHTML = TABS.map(([k,l])=>`<button data-act="tab" data-v="${k}" ${tab===k?'aria-current="page"':""}>${ICONS[k]}<span>${l}</span></button>`).join("");
-  const V = {overview:vOverview,tasks:vTasks,vehicles:vVehicles,contracts:vContracts,docs:vDocs,more:vMore,home:vHome,feed:vFeed}[tab] || vOverview;
+  const V = {overview:vOverview,tasks:vTasks,vehicles:vVehicles,more:vMore,home:vHome,feed:vFeed}[tab] || vOverview;
   const back = navMode() !== "leiste" && tab !== homeTab() ? `<div class="backbar"><button class="btn ghost" data-act="go" data-v="${homeTab()}">${icon("back")}${navMode()==="kacheln"?"Startseite":"Alle Termine"}</button></div>` : "";
   document.getElementById("view").innerHTML = back + V();
   const fab = document.getElementById("fab");
@@ -1220,11 +1103,12 @@ function formMember(m){
   };
 }
 
-function formVehicle(v){
-  const isNew = !v; v = v || {name:"",plate:"",memberId:presetMember(),year:"",km:"",notes:"",files:[]};
+function formVehicle(v, preset={}){
+  const isNew = !v; v = v || {type:preset.type||"auto",name:"",plate:"",memberId:presetMember(),year:"",km:"",notes:"",files:[]};
   const files = [...(v.files||[])];
   openDlg(isNew?"Fahrzeug hinzufügen":"Fahrzeug bearbeiten",
-    fld("Bezeichnung",`<input id="vName" value="${esc(v.name)}" placeholder="z. B. VW Golf">`) +
+    fld("Art",`<select id="vType">${VTYPES.map(([k,l])=>`<option value="${k}" ${k===vType(v)?"selected":""}>${k==="sonst"?"Sonstiges (Motorrad, Wohnwagen …)":l.replace(/s$/,"")}</option>`).join("")}</select>`) +
+    fld("Bezeichnung",`<input id="vName" value="${esc(v.name)}" placeholder="z. B. VW Golf, Pongratz-Anhänger">`) +
     fld("Kennzeichen",`<input id="vPlate" value="${esc(v.plate)}" placeholder="G-123AB">`) +
     fld("Gehört zu",`<select id="vMem">${memberOpts(v.memberId)}</select>`) +
     fld("Baujahr",`<input id="vYear" inputmode="numeric" value="${esc(v.year)}">`) +
@@ -1232,7 +1116,7 @@ function formVehicle(v){
     fld("Notizen",`<textarea id="vNotes" placeholder="z. B. Reifengröße, Werkstatt, Telefonnummer …">${esc(v.notes)}</textarea>`,true) +
     filesBlock() + `<p class="hint">Tipp: Zulassungsschein und Reifen-Einlagerungsschein abfotografieren.</p>`,
     q => {
-      const d = {name:val(q,"vName"), plate:val(q,"vPlate").toUpperCase(), memberId:q("vMem").value, year:val(q,"vYear"), km:val(q,"vKm"), notes:val(q,"vNotes"), files};
+      const d = {type:q("vType").value, name:val(q,"vName"), plate:val(q,"vPlate").toUpperCase(), memberId:q("vMem").value, year:val(q,"vYear"), km:val(q,"vKm"), notes:val(q,"vNotes"), files};
       if(!d.name) return "Bitte eine Bezeichnung eingeben.";
       if(isNew) S.vehicles.push({id:uid(),...d}); else Object.assign(v,d);
     },
@@ -1246,7 +1130,7 @@ function formVehicle(v){
 }
 
 function kindOpts(sel){
-  return Object.entries(CATS).map(([c,l]) => `<optgroup label="${l}">${Object.entries(KINDS).filter(([,o])=>o.c===c).map(([k,o])=>`<option value="${k}" ${k===sel?"selected":""}>${o.l}</option>`).join("")}</optgroup>`).join("");
+  return [["auto","Fahrzeug"],["sonst","Allgemein"]].map(([c,l]) => `<optgroup label="${l}">${Object.entries(KINDS).filter(([k,o])=>o.c===c && (!o.hidden || k===sel)).map(([k,o])=>`<option value="${k}" ${k===sel?"selected":""}>${o.l}</option>`).join("")}</optgroup>`).join("");
 }
 function repHint(kind){
   if(kind==="reifen") return "Nächster Wechsel wird automatisch vorgeschlagen: Mitte Oktober bzw. Anfang April.";
@@ -1256,7 +1140,7 @@ function repHint(kind){
 }
 function formTask(t, preset={}){
   const isNew = !t;
-  const defKind = preset.kind ? preset.kind : preset.vehicleId ? "pickerl" : (taskCat==="haus"?"therme":taskCat==="gesundheit"?"vorsorge":taskCat==="sonst"?"sonst":"pickerl");
+  const defKind = preset.kind ? preset.kind : preset.vehicleId ? "pickerl" : (taskCat==="sonst"?"sonst":"pickerl");
   t = t || {kind:defKind, title:"", due:"", memberId: preset.vehicleId ? "" : presetMember(), vehicleId: preset.vehicleId||"", notes:"", done:false, files:[]};
   const files = [...(t.files||[])];
   const rep = t.rep ?? KINDS[t.kind]?.m ?? 0;
@@ -1330,50 +1214,7 @@ function formFuel(f, vid){
     isNew ? null : () => { S.fuel = S.fuel.filter(x=>x.id!==f.id); });
 }
 
-function formContract(c){
-  const isNew = !c;
-  c = c || {cat:contractView, type:contractView==="ins"?"KFZ-Haftpflicht":"Handy", company:"", policy:"", premium:"", freq:"monatlich", memberId:presetMember(), vehicleId:"", renewal:"", notice:"1", autoRenew:true, notes:"", files:[]};
-  const files = [...(c.files||[])];
-  const ins = (c.cat||"ins") === "ins";
-  const types = ins ? INS_TYPES : ABO_TYPES;
-  openDlg(isNew?(ins?"Versicherung hinzufügen":"Vertrag hinzufügen"):(ins?"Versicherung bearbeiten":"Vertrag bearbeiten"),
-    fld("Art",`<select id="iType">${types.map(x=>`<option ${x===c.type?"selected":""}>${x}</option>`).join("")}${types.includes(c.type)?"":`<option selected>${esc(c.type)}</option>`}</select>`) +
-    fld(ins?"Gesellschaft":"Anbieter",`<input id="iComp" value="${esc(c.company)}" placeholder="${ins?"z. B. Uniqa, Wiener Städtische …":"z. B. A1, Magenta, Energie Steiermark …"}">`) +
-    fld(ins?"Polizzennummer":"Vertrags-/Kundennummer",`<input id="iPol" value="${esc(c.policy)}">`) +
-    fld("Betrag (€)",`<input id="iPrem" type="number" step="0.01" min="0" value="${esc(c.premium)}">`) +
-    fld("Zahlweise",`<select id="iFreq">${Object.keys(FREQ).map(f=>`<option ${f===c.freq?"selected":""}>${f}</option>`).join("")}</select>`) +
-    fld("Ablauf / Verlängerung am",`<input id="iRen" type="date" value="${esc(c.renewal)}">`) +
-    fld("Kündigungsfrist",`<select id="iNot">${[["0","keine / jederzeit"],["1","1 Monat"],["2","2 Monate"],["3","3 Monate"],["6","6 Monate"]].map(([v,l])=>`<option value="${v}" ${String(c.notice||"0")===v?"selected":""}>${l}</option>`).join("")}</select>`) +
-    `<label class="check" style="grid-column:auto"><input type="checkbox" id="iAuto" ${c.autoRenew!==false?"checked":""}> Verlängert sich automatisch um 1 Jahr</label>` +
-    fld("Person",`<select id="iMem">${memberOpts(c.memberId)}</select>`) +
-    (ins ? fld("Fahrzeug",`<select id="iVeh">${vehOpts(c.vehicleId)}</select>`) : "") +
-    fld("Notizen",`<textarea id="iNotes" placeholder="z. B. Selbstbehalt, Ansprechpartner, Telefonnummer, Bindung …">${esc(c.notes)}</textarea>`,true) +
-    filesBlock() + `<p class="hint">Die App erinnert dich vor Ablauf der Kündigungsfrist. Die genaue Frist steht in deiner Polizze bzw. im Vertrag.</p>`,
-    q => {
-      const d = {cat:c.cat||"ins", type:q("iType").value, company:val(q,"iComp"), policy:val(q,"iPol"), renewal:q("iRen").value, notice:q("iNot").value, autoRenew:q("iAuto").checked, premium:val(q,"iPrem"), freq:q("iFreq").value, memberId:q("iMem").value, vehicleId: ins ? q("iVeh").value : "", notes:val(q,"iNotes"), files};
-      if(isNew) S.contracts.push({id:uid(),...d}); else Object.assign(c,d);
-    },
-    isNew ? null : () => { S.contracts = S.contracts.filter(x=>x.id!==c.id); });
-  wireFiles(files);
-}
 
-function formDoc(d){
-  const isNew = !d;
-  d = d || {type:"Reisepass", memberId:presetMember(), number:"", expiry:"", notes:"", files:[]};
-  const files = [...(d.files||[])];
-  openDlg(isNew?"Dokument hinzufügen":"Dokument bearbeiten",
-    fld("Art",`<select id="oType">${Object.keys(DOC_TYPES).map(x=>`<option ${x===d.type?"selected":""}>${x}</option>`).join("")}</select>`) +
-    fld("Person",`<select id="oMem">${memberOpts(d.memberId)}</select>`) +
-    fld("Gültig bis",`<input id="oExp" type="date" value="${esc(d.expiry)}">`) +
-    fld("Nummer (optional)",`<input id="oNum" value="${esc(d.number)}">`) +
-    fld("Notizen",`<textarea id="oNotes" placeholder="z. B. Termin bei der BH / beim Magistrat …">${esc(d.notes)}</textarea>`,true) + filesBlock(),
-    q => {
-      const x = {type:q("oType").value, memberId:q("oMem").value, expiry:q("oExp").value, number:val(q,"oNum"), notes:val(q,"oNotes"), files};
-      if(isNew) S.docs.push({id:uid(),...x}); else Object.assign(d,x);
-    },
-    isNew ? null : () => { S.docs = S.docs.filter(x=>x.id!==d.id); });
-  wireFiles(files);
-}
 
 /* ================= Export ================= */
 function exportMsg(t){ const e = document.getElementById("exportMsg"); if(e) e.textContent = t; }
@@ -1395,9 +1236,7 @@ async function exportXlsx(){
     const wb = XLSX.utils.book_new();
     const add = (name, rows) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length?rows:[{Hinweis:"Keine Einträge"}]), name);
     add("Aufgaben", S.tasks.map(t => ({Bereich:CATS[catOf(t)], Art:kindLabel(t), Titel:t.title||"", Fahrzeug:vName(t.vehicleId), Person:mName(t.memberId||vehicleMember(t.vehicleId)), "Fällig":t.due||"", Status:t.done?"erledigt":"offen", "Erledigt am":t.doneDate||"", "Kosten (€)":n2(t.cost), "km-Stand":n2(t.km), Notizen:t.notes||""})));
-    add("Verträge", S.contracts.map(c => ({Gruppe:c.cat==="abo"?"Abo/Vertrag":"Versicherung", Art:c.type, Anbieter:c.company||"", Nummer:c.policy||"", Person:mName(c.memberId||vehicleMember(c.vehicleId)), Fahrzeug:vName(c.vehicleId), "Betrag (€)":n2(c.premium), Zahlweise:c.freq, "Pro Jahr (€)":yearly(c), "Ablauf/Verlängerung":effRenewal(c), "Kündigen bis":deadline(c), Notizen:c.notes||""})));
-    add("Dokumente", S.docs.map(d => ({Art:d.type, Person:mName(d.memberId), "Gültig bis":d.expiry||"", Nummer:d.number||"", Notizen:d.notes||""})));
-    add("Fahrzeuge", S.vehicles.map(v => ({Bezeichnung:v.name, Kennzeichen:v.plate||"", Person:mName(v.memberId), Baujahr:v.year||"", "km-Stand":n2(v.km), Notizen:v.notes||""})));
+    add("Fahrzeuge", S.vehicles.map(v => ({Art:CATS[vType(v)], Bezeichnung:v.name, Kennzeichen:v.plate||"", Person:mName(v.memberId), Baujahr:v.year||"", "km-Stand":n2(v.km), Notizen:v.notes||""})));
     add("Tankbuch", S.fuel.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(f => ({Datum:f.date, Fahrzeug:vName(f.vehicleId), Liter:n2(f.liters), "Betrag (€)":n2(f.cost), "km-Stand":n2(f.km), Vollgetankt:f.full!==false?"ja":"nein"})));
     add("Familie", S.members.map(m => ({Name:m.name})));
     const buf = XLSX.write(wb, {bookType:"xlsx", type:"array"});
@@ -1434,7 +1273,7 @@ function importJson(e){
     try{ for(const [id,v] of Object.entries(files)){ await IDB.put(id, {type:v.type, data:b64ToBuf(v.data)}); nf++; } }
     catch(err){ exportMsg("Die Fotos konnten nicht alle übernommen werden – der Speicher des Geräts ist eventuell voll."); }
     openDlg("Datei importieren",
-      `<p class="hint" style="font-size:14px">In der Datei: ${inc.members.length} Personen, ${inc.vehicles.length} Fahrzeuge, ${inc.tasks.length} Aufgaben, ${inc.contracts.length} Verträge, ${inc.docs.length} Ausweise, ${inc.fuel.length} Tankfüllungen, ${nf} Fotos/PDFs.</p>
+      `<p class="hint" style="font-size:14px">In der Datei: ${inc.members.length} Personen, ${inc.vehicles.length} Fahrzeuge, ${inc.tasks.length} Aufgaben, ${inc.fuel.length} Tankfüllungen, ${nf} Fotos/PDFs.</p>
        <label class="check"><input type="radio" name="imode" value="merge" checked> Zu den vorhandenen Daten dazufügen</label>
        <label class="check"><input type="radio" name="imode" value="replace"> Alle vorhandenen Daten ersetzen</label>
        <p class="hint">Beim Dazufügen werden gleiche Einträge (z. B. aus einem früheren Export) nicht doppelt angelegt, sondern aktualisiert.</p>`,
@@ -1472,7 +1311,6 @@ document.addEventListener("click", e => {
     case "filter": filter = id; render(); break;
     case "tv": taskView = b.dataset.v; render(); break;
     case "tcat": taskCat = b.dataset.v; render(); break;
-    case "cv": contractView = b.dataset.v; render(); break;
     case "mv": moreView = b.dataset.v; render(); break;
     case "sy": statYear = Number(b.dataset.v); render(); break;
     case "showMember": filter = id; tab = homeTab(); render(); window.scrollTo(0,0); break;
@@ -1485,10 +1323,6 @@ document.addEventListener("click", e => {
     case "done": formDone(byId(S.tasks,id)); break;
     case "addFuel": formFuel(null, b.dataset.veh); break;
     case "editFuel": formFuel(byId(S.fuel,id)); break;
-    case "addContract": formContract(); break;
-    case "editContract": formContract(byId(S.contracts,id)); break;
-    case "addDoc": formDoc(); break;
-    case "editDoc": formDoc(byId(S.docs,id)); break;
     case "seasonTires": seasonTires(b.dataset.v); break;
     case "seasonVignette": seasonVignette(); break;
     case "exportXlsx": exportXlsx(); break;
@@ -1503,7 +1337,6 @@ document.addEventListener("click", e => {
     case "quickPick": quickPick(b.dataset.v); break;
     case "quickFuel": dlg.close(); formFuel(null, b.dataset.veh); break;
     case "pickSkin": setSkin(b.dataset.v); dlgInner.querySelectorAll('[data-act="pickSkin"]').forEach(x => x.setAttribute("aria-pressed", x===b)); break;
-    case "area": if(["contracts","docs"].includes(b.dataset.v)){ tab = b.dataset.v; if(tab==="contracts") contractView="ins"; } else { tab = "tasks"; taskCat = b.dataset.v; taskView = "open"; } render(); window.scrollTo(0,0); break;
     case "openFile": openFile(b.dataset.fid, b.dataset.name, b.dataset.type); break;
   }
 });
@@ -1526,60 +1359,39 @@ document.documentElement.dataset.nav = getNav() || "liste";
 tab = homeTab();
 let feedQuery = "", feedCat = "all", suppressClick = false;
 
-function newsNote(){
-  return "";
-  return `<div class="notes"><div class="note"><h3>Neu: Drei Arten der Bedienung</h3><p>Wähle, wie du dich durch die App bewegst: mit der Leiste unten, mit großen Kacheln oder mit einer einzigen Liste.</p><button class="btn" data-act="skin">${icon("palette")}Bedienung wählen</button></div></div>`;
-}
 function countStatus(){
   const open = fTasks().filter(t=>!t.done);
-  const late = open.filter(t=>taskStatus(t)==="late").length + fContracts().filter(c=>contractStatus(c)==="late").length + fDocs().filter(d=>docStatus(d)==="late").length;
-  const soon = open.filter(t=>taskStatus(t)==="soon").length + fContracts().filter(c=>contractStatus(c)==="soon").length + fDocs().filter(d=>docStatus(d)==="soon").length;
-  return {open, late, soon};
+  return {open, late: open.filter(t=>taskStatus(t)==="late").length, soon: open.filter(t=>taskStatus(t)==="soon").length};
 }
 function statusLine(items, stFn, emptyTxt){
   const late = items.filter(x=>stFn(x)==="late").length, soon = items.filter(x=>stFn(x)==="soon").length;
   return late ? `<span class="s bad">${late} überfällig</span>` : soon ? `<span class="s warn">${soon} bald fällig</span>` : `<span class="s">${emptyTxt(items.length)}</span>`;
 }
 function vHome(){
-  if(!S.members.length && !S.vehicles.length){
-    return helloBlock(0,0,0) + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Danach kannst du Pickerl, Reifenwechsel, Thermenwartung, Arzttermine, Verträge und Ausweise eintragen.","addMember","Person hinzufügen");
-  }
   const {open, late, soon} = countStatus();
-  const all = [...open.map(t=>taskStatus(t)), ...fContracts().map(c=>contractStatus(c)), ...fDocs().map(d=>docStatus(d))];
+  if(!S.vehicles.length && !S.tasks.length) return helloBlock(0,0,0) + empty(START_TXT,"quick","Fahrzeug anlegen");
   const tile = (v, label, ic, col, s) => `<button class="tile" data-act="go" data-v="${v}" style="--ic:var(${col})">${chipIco(ic,col)}<span><b>${label}</b>${s}</span></button>`;
-  const cons = fContracts();
-  const y = new Date().getFullYear();
-  const spent = fTasks().filter(t => t.done && yearOf(t.doneDate)===y).reduce((a,t)=>a+(Number(t.cost)||0),0) + fFuel().filter(f => yearOf(f.date)===y).reduce((a,f)=>a+(Number(f.cost)||0),0);
-  return helloBlock(open.length, late, soon) + newsNote() + seasonalNotes() + `<div class="launch">
-    ${tile("overview","Als Nächstes","cal","--c-sonst", late?`<span class="s bad">${late} überfällig</span>`:soon?`<span class="s warn">${soon} bald fällig</span>`:`<span class="s">nichts dringend</span>`)}
-    ${tile("tasks","Aufgaben","check","--c-ges", statusLine(open, taskStatus, n => n ? n+" offen" : "alles erledigt"))}
-    ${tile("vehicles","Autos","car","--c-auto", `<span class="s">${fVeh().length} ${fVeh().length===1?"Fahrzeug":"Fahrzeuge"}</span>`)}
-    ${tile("contracts","Verträge","shield","--c-ins", statusLine(cons, contractStatus, n => eur(cons.reduce((a,c)=>a+yearly(c),0)/12)+" / Monat"))}
-    ${tile("docs","Ausweise","passport","--c-doc", statusLine(fDocs(), docStatus, n => n+" gespeichert"))}
+  const grp = k => statusLine(open.filter(t => catOf(t)===k), taskStatus, n => n ? n+" offen" : "alles erledigt");
+  const sp = spendYear(new Date().getFullYear());
+  return helloBlock(open.length, late, soon) + backupNote() + seasonalNotes() + `<div class="launch">
+    ${tile("overview","Als Nächstes","cal","--c-ins", late?`<span class="s bad">${late} überfällig</span>`:soon?`<span class="s warn">${soon} bald fällig</span>`:`<span class="s">nichts dringend</span>`)}
+    ${tile("cat:auto","Autos","car","--c-auto", grp("auto"))}
+    ${tile("cat:anhaenger","Anhänger","trailer","--c-haus", grp("anhaenger"))}
+    ${tile("cat:sonst","Sonstiges","moto","--c-sonst", grp("sonst"))}
+    ${tile("vehicles","Fahrzeuge","car","--c-auto", `<span class="s">${fVeh().length} ${fVeh().length===1?"Fahrzeug":"Fahrzeuge"}</span>`)}
+    ${tile("tasks:done","Erledigt & Kosten","check","--c-ges", `<span class="s">${eur(sp.total)} heuer</span>`)}
     ${tile("more:family","Familie","user","--c-haus", `<span class="s">${S.members.length} ${S.members.length===1?"Person":"Personen"}</span>`)}
-    ${tile("more:stats","Auswertung","chart","--c-abo", `<span class="s">${eur(spent)} heuer</span>`)}
+    ${tile("more:stats","Auswertung","chart","--c-abo", `<span class="s">${eur(sp.total)} heuer</span>`)}
     ${tile("more:backup","Export & Import","download","--c-sonst", `<span class="s">${lastBackup()?"zuletzt "+fmtD(lastBackup()):"noch nie"}</span>`)}
     ${tile("skin","Aussehen & Bedienung","palette","--c-ins", `<span class="s">${(SKINS.find(s=>s[0]===document.documentElement.dataset.skin)||SKINS[0])[1]} · ${(NAVS.find(n=>n[0]===navMode())||NAVS[0])[1]}</span>`)}
   </div>`;
 }
 function feedItems(){
   const q = feedQuery.trim().toLowerCase();
-  const items = [];
   const match = txt => !q || txt.toLowerCase().includes(q);
-  if(["all","auto","haus","gesundheit","sonst"].includes(feedCat)) fTasks().filter(t => !t.done && (feedCat==="all" || catOf(t)===feedCat)).forEach(t => {
-    if(!match([t.title, kindLabel(t), t.notes, whoText(t.memberId,t.vehicleId)].join(" "))) return;
-    const st = taskStatus(t); const d = t.kind==="pickerl" && t.due ? pickerlWindow(t.due).from : t.due;
-    items.push({d, st, html: compactTask(t, st)});
-  });
-  if(["all","contracts"].includes(feedCat)) fContracts().forEach(c => {
-    if(!c.renewal || !match([c.type, c.company, c.policy, c.notes, whoText(c.memberId,c.vehicleId)].join(" "))) return;
-    const st = contractStatus(c); items.push({d: deadline(c) || c.renewal, st, html: compactContract(c, st)});
-  });
-  if(["all","docs"].includes(feedCat)) fDocs().forEach(dd => {
-    if(!dd.expiry || !match([dd.type, member(dd.memberId)?.name, dd.notes].join(" "))) return;
-    const st = docStatus(dd); items.push({d: addMonths(dd.expiry, -docWarn(dd)), st, html: compactDoc(dd, st)});
-  });
-  return items;
+  return fTasks().filter(t => !t.done && (feedCat==="all" || catOf(t)===feedCat))
+    .filter(t => match([t.title, kindLabel(t), t.notes, whoText(t.memberId,t.vehicleId), vehicle(t.vehicleId)?.plate].join(" ")))
+    .map(t => { const st = taskStatus(t); return {d: t.kind==="pickerl" && t.due ? pickerlWindow(t.due).from : t.due, st, html: compactTask(t, st)}; });
 }
 function feedListHtml(){
   const items = feedItems();
@@ -1595,44 +1407,45 @@ function feedListHtml(){
   return groups.filter(g=>g[1].length).map(([l,arr,cls]) => `<div class="fgroup ${cls||""}">${l} · ${arr.length}</div><div class="clist">${arr.map(i=>i.html).join("")}</div>`).join("");
 }
 function vFeed(){
-  if(!S.members.length && !S.vehicles.length){
-    return helloBlock(0,0,0) + empty("Leg zuerst die Familienmitglieder an, dann eure Autos. Über das Menü links oben findest du alle Bereiche.","addMember","Person hinzufügen");
-  }
+  if(!S.vehicles.length && !S.tasks.length) return helloBlock(0,0,0) + empty(START_TXT,"quick","Fahrzeug anlegen");
   const {open, late, soon} = countStatus();
-  const cats = [["all","Alle"],["auto","Auto"],["haus","Haus"],["gesundheit","Gesundheit"],["contracts","Verträge"],["docs","Ausweise"]];
-  const lb = lastBackup();
-  const backup = (!lb || daysUntil(lb) < -30) ? `<div class="notes"><div class="note"><h3>Daten sichern</h3><p>Deine Daten sind nur auf diesem Gerät gespeichert. Exportiere sie regelmäßig, damit nichts verloren geht.</p><button class="btn" data-act="goBackup">Jetzt exportieren</button></div></div>` : "";
-  return helloBlock(open.length, late, soon) + newsNote() + backup + seasonalNotes() +
-    `<div class="searchbox" style="margin-top:16px">${icon("search")}<input id="feedSearch" type="search" placeholder="Suchen: Pickerl, Uniqa, Lena …" value="${esc(feedQuery)}" aria-label="Suchen"></div>
+  const cats = [["all","Alle"],["auto","Autos"],["anhaenger","Anhänger"],["sonst","Sonstiges"]];
+  return helloBlock(open.length, late, soon) + backupNote() + seasonalNotes() +
+    `<div class="searchbox" style="margin-top:16px">${icon("search")}<input id="feedSearch" type="search" placeholder="Suchen: Pickerl, Golf, G-123AB …" value="${esc(feedQuery)}" aria-label="Suchen"></div>
      <div class="chips" style="margin:0 0 4px">${cats.map(([k,l])=>`<button class="chip" data-act="fcat" data-v="${k}" aria-pressed="${feedCat===k}">${l}</button>`).join("")}</div>
      <p class="swipehint">${icon("check")}Aufgabe nach rechts wischen oder Häkchen tippen = erledigt</p>
      <div id="feedList">${feedListHtml()}</div>`;
 }
 function openDrawer(){
-  const items = [["feed","Alle Termine","cal","--c-sonst"],["tasks","Aufgaben","check","--c-ges"],["vehicles","Autos","car","--c-auto"],["contracts","Verträge","shield","--c-ins"],["docs","Ausweise","passport","--c-doc"],["more:family","Familie","user","--c-haus"],["more:stats","Auswertung","chart","--c-abo"],["more:backup","Export & Import","download","--c-sonst"],["more:install","Als App nutzen","phone","--c-sonst"],["skin","Aussehen & Bedienung","palette","--c-ins"]];
-  const cur = tab === "more" ? "more:"+moreView : tab;
-  document.getElementById("drawerInner").innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:4px 18px 14px"><h3 style="font-size:20px">Zettelwirtschaft</h3></div>` +
-    items.map(([v,l,ic,col]) => `<button class="dnav" data-act="go" data-v="${v}" ${cur===v?'aria-current="page"':""}>${chipIco(ic,col)}${l}</button>`).join("");
+  const groups = [
+    ["Übersicht", [["feed:all","Alle Termine","cal","--c-ins"],["feed:auto","Autos","car","--c-auto"],["feed:anhaenger","Anhänger","trailer","--c-haus"],["feed:sonst","Sonstiges","moto","--c-sonst"]]],
+    ["Verwalten", [["vehicles","Fahrzeuge","car","--c-auto"],["tasks:done","Erledigt & Kosten","check","--c-ges"],["more:family","Familie","user","--c-haus"]]],
+    ["Extras", [["more:stats","Auswertung","chart","--c-abo"],["more:backup","Export & Import","download","--c-sonst"],["more:install","Als App nutzen","phone","--c-sonst"],["skin","Aussehen & Bedienung","palette","--c-ins"]]]
+  ];
+  const cur = tab === "more" ? "more:"+moreView : tab === "feed" ? "feed:"+feedCat : tab === "tasks" && taskView === "done" ? "tasks:done" : tab;
+  const count = k => fTasks().filter(t => !t.done && (k==="all" || catOf(t)===k)).length;
+  document.getElementById("drawerInner").innerHTML = `<div style="display:flex;align-items:center;gap:10px;padding:4px 18px 8px"><h3 style="font-size:20px">Zettelwirtschaft</h3></div>` +
+    groups.map(([g,items]) => `<div class="dhead">${g}</div>` + items.map(([v,l,ic,col]) => `<button class="dnav" data-act="go" data-v="${v}" ${cur===v?'aria-current="page"':""}>${chipIco(ic,col)}<span style="flex:1">${l}</span>${v.startsWith("feed:")&&count(v.slice(5))?`<span class="dcount">${count(v.slice(5))}</span>`:""}</button>`).join("")).join("");
   document.getElementById("drawer").showModal();
 }
 function goTo(v){
   const dr = document.getElementById("drawer"); if(dr.open) dr.close();
   if(v === "skin"){ chooseSkin(); return; }
   if(v.startsWith("more:")){ tab = "more"; moreView = v.slice(5); }
-  else tab = v;
+  else if(v.startsWith("feed:")){ tab = "feed"; feedCat = v.slice(5); }
+  else if(v.startsWith("cat:")){ tab = navMode()==="liste" ? "feed" : "tasks"; feedCat = taskCat = v.slice(4); taskView = "open"; }
+  else if(v === "tasks:done"){ tab = "tasks"; taskView = "done"; taskCat = "all"; }
+  else { tab = v; if(v === "tasks") taskView = "open"; }
   render(); window.scrollTo(0,0);
 }
 const QUICK = [
-  ["Auto"],
+  ["Aufgabe"],
   ["task:pickerl","Pickerl","pickerl","--c-auto"],["task:reifen","Reifen&shy;wechsel","tire","--c-auto"],["task:service","Service","wrench","--c-auto"],
-  ["fuel","Tanken","fuel","--c-auto"],["task:vignette","Vignette","ticket","--c-auto"],["task:reparatur","Reparatur","tools","--c-auto"],
-  ["Haus & Gesundheit"],
-  ["task:therme","Therme","flame","--c-haus"],["task:rauchfang","Rauchfang&shy;kehrer","chimney","--c-haus"],["task:haus","Haus sonstiges","house","--c-haus"],
-  ["task:vorsorge","Vorsorge","heart","--c-ges"],["task:zahnarzt","Zahnarzt","tooth","--c-ges"],["task:arzt","Arzttermin","stetho","--c-ges"],
-  ["Verträge & Ausweise"],
-  ["contract:ins","Versicherung","shield","--c-ins"],["contract:abo","Abo / Vertrag","phone","--c-abo"],["doc","Ausweis","passport","--c-doc"],
-  ["Sonstiges"],
-  ["task:sonst","Andere Aufgabe","dots","--c-sonst"],["vehicle","Fahrzeug","car","--c-auto"],["member","Person","user","--c-haus"]
+  ["task:oel","Ölwechsel","drop","--c-auto"],["task:vignette","Vignette","ticket","--c-auto"],["task:reparatur","Reparatur","tools","--c-auto"],
+  ["fuel","Tanken","fuel","--c-auto"],["task:sonst","Andere Aufgabe","dots","--c-sonst"],
+  ["Neu anlegen"],
+  ["vehicle:auto","Auto","car","--c-auto"],["vehicle:anhaenger","Anhänger","trailer","--c-haus"],["vehicle:sonst","Sonstiges Fahrzeug","moto","--c-sonst"],
+  ["member","Person","user","--c-ins"]
 ];
 function quickAdd(){
   if(dlg.open) dlg.close();
@@ -1643,17 +1456,15 @@ function quickAdd(){
 }
 function quickPick(v){
   if(v === "fuel"){
-    const vs = fVeh().length ? fVeh() : S.vehicles;
+    const vs = (fVeh().length ? fVeh() : S.vehicles).filter(x => vType(x) !== "anhaenger");
     if(!vs.length){ dlg.close(); formVehicle(); return; }
     if(vs.length === 1){ dlg.close(); formFuel(null, vs[0].id); return; }
-    dlgInner.querySelector(".qgrid").innerHTML = `<div class="qhead">Welches Auto?</div>` + vs.map(x => `<button class="qbtn" data-act="quickFuel" data-veh="${x.id}">${chipIco("car","--c-auto")}<span>${esc(x.name)}</span></button>`).join("");
+    dlgInner.querySelector(".qgrid").innerHTML = `<div class="qhead">Welches Fahrzeug?</div>` + vs.map(x => `<button class="qbtn" data-act="quickFuel" data-veh="${x.id}">${vIco(x)}<span>${esc(x.name)}</span></button>`).join("");
     return;
   }
   dlg.close();
   if(v.startsWith("task:")) formTask(null, {kind: v.slice(5)});
-  else if(v.startsWith("contract:")){ contractView = v.slice(9); formContract(); }
-  else if(v === "doc") formDoc();
-  else if(v === "vehicle") formVehicle();
+  else if(v.startsWith("vehicle:")) formVehicle(null, {type: v.slice(8)});
   else if(v === "member") formMember();
 }
 /* Wischen zum Erledigen */

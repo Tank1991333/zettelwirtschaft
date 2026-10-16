@@ -1,6 +1,6 @@
 // Zettelwirtschaft – Offline-Unterstützung
 // Bei jeder neuen Version die Nummer erhöhen, damit Handys die neue Version laden.
-const CACHE = "zettelwirtschaft-v5";
+const CACHE = "zettelwirtschaft-v9";
 const APP = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png", "icons/apple-touch-icon-180.png", "icons/favicon-32.png"];
 
 self.addEventListener("install", e => {

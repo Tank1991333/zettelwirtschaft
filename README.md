@@ -1,30 +1,24 @@
 # Zettelwirtschaft
 
-Die Familien-App für alles, was regelmäßig erledigt werden muss: Pickerl, Reifenwechsel, Service, Versicherungen, Verträge und Ausweise. Gemacht für Österreich.
+Die Familien-App für Autos, Anhänger und sonstige Fahrzeuge: Pickerl, Reifenwechsel, Service, Tanken und alle Kosten. Gemacht für Österreich.
 
 ![Übersicht](store-bilder/store-1-overview.png)
 
 ## Funktionen
 
-**Autos**
+**Autos, Anhänger und Sonstiges** (z. B. Motorrad, Wohnwagen)
 - Pickerl (§57a) mit Toleranzfrist: zeigt, ab wann man hinfahren kann (ein Monat vorher) und bis wann es spätestens sein muss (vier Monate danach)
 - Reifenwechsel mit Erinnerung an die situative Winterreifenpflicht (1. November bis 15. April)
 - Vignette, Service, Ölwechsel, Reparaturen
 - Tankbuch mit Verbrauch (l/100 km) und Spritkosten
 - Werkstatt-Verlauf mit allen Kosten
 
-**Haus & Wohnung:** Thermenwartung, Rauchfangkehrer, Rauchmelder, Klimaanlage
 
-**Gesundheit:** Vorsorgeuntersuchung, Zahnarzt, Impfungen, Arzttermine
-
-**Verträge:** Versicherungen sowie Abos und Verträge (Handy, Strom, Internet …) mit Kündigungsfristen und automatischer Verlängerung
-
-**Ausweise:** Reisepass, Personalausweis, Führerschein, E-Card mit rechtzeitiger Erinnerung vor dem Ablauf
 
 **Außerdem**
 - Alles einer Person aus der Familie zuordnen und nach Person filtern
-- Fotos und PDFs von Rechnungen, Polizzen und Dokumenten
-- Auswertung der Kosten nach Monat, Bereich, Auto und Person
+- Fotos und PDFs von Rechnungen und Zulassungsscheinen
+- Auswertung der Kosten nach Monat, Fahrzeug und Person
 - Termine in den Google Kalender übernehmen
 - Export und Import (mit oder ohne Fotos), Excel-Export
 - Funktioniert offline und lässt sich am Handy wie eine App installieren
